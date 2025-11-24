@@ -31,7 +31,7 @@ Multiplatform Timber-like lightweight and extensible logging library for Kotlin 
 ### Installation
 ```kotlin
 dependencies {
-    implementation("io.github.chilinoodles:cedar-logging:0.2.0")
+    implementation("org.kimplify:cedar-logging:0.2.0")
 }
 ```
 
@@ -42,14 +42,14 @@ dependencies {
 // In your iOS app's build.gradle.kts
 listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { target ->
     target.binaries.framework {
-        export("io.github.chilinoodles:cedar-logging:0.2.0")
+        export("org.kimplify:cedar-logging:0.2.0")
         baseName = "YourApp"
         isStatic = true
     }
 }
 
 // In commonMain dependencies
-api("io.github.chilinoodles:cedar-logging:0.2.0")
+api("org.kimplify:cedar-logging:0.2.0")
 ```
 
 #### Option 2: CocoaPods Integration
@@ -256,13 +256,13 @@ Cedar Logger is published to Maven Central and ready for production use:
 ### Dependency Information
 ```kotlin
 // Kotlin Multiplatform
-implementation("io.github.chilinoodles:cedar-logging:0.2.0")
+implementation("org.kimplify:cedar-logging:0.2.0")
 
 // Android only
-implementation("io.github.chilinoodles:cedar-logging-android:0.2.0")
+implementation("org.kimplify:cedar-logging-android:0.2.0")
 
 // JVM only  
-implementation("io.github.chilinoodles:cedar-logging-jvm:0.2.0")
+implementation("org.kimplify:cedar-logging-jvm:0.2.0")
 ```
 
 ### Platform Support

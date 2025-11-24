@@ -82,14 +82,14 @@ kotlin {
 }
 
 android {
-    namespace = "io.github.chilinoodles.sample"
+    namespace = "org.kimplify.sample"
     compileSdk = 36
 
     defaultConfig {
         minSdk = 21
         targetSdk = 36
 
-        applicationId = "io.github.chilinoodles.sample"
+        applicationId = "org.kimplify.sample"
         versionCode = 1
         versionName = "1.0.0"
     }
@@ -97,11 +97,11 @@ android {
 
 compose.desktop {
     application {
-        mainClass = "io.github.chilinoodles.sample.MainKt"
+        mainClass = "org.kimplify.sample.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "io.github.chilinoodles.sample"
+            packageName = "org.kimplify.sample"
             packageVersion = "1.0.0"
         }
     }
@@ -110,7 +110,7 @@ compose.desktop {
 tasks.register<JavaExec>("runJvm") {
     group = "application"
     description = "Runs the JVM MainKt"
-    mainClass.set("io.github.chilinoodles.sample.MainKt")
+    mainClass.set("org.kimplify.sample.MainKt")
     classpath = kotlin.targets
         .getByName("jvm")
         .compilations

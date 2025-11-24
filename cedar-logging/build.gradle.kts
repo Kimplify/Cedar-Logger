@@ -87,7 +87,7 @@ android {
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
-    coordinates("io.github.chilinoodles", "cedar-logging", libs.versions.appVersionName.get())
+    coordinates("org.kimplify", "cedar-logging", libs.versions.appVersionName.get())
 
     pom {
         name = "Cedar Logger"

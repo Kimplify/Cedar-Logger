@@ -337,7 +337,7 @@
 					"-framework",
 					ComposeApp,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.chilinoodles.cedar;
+				PRODUCT_BUNDLE_IDENTIFIER = org.kimplify.cedar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -369,7 +369,7 @@
 					"-framework",
 					ComposeApp,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.chilinoodles.cedar;
+				PRODUCT_BUNDLE_IDENTIFIER = org.kimplify.cedar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
