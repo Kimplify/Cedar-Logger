@@ -74,7 +74,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.chilinoodles.cedar"
+    namespace = "org.kimplify.cedar"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -93,7 +93,7 @@ mavenPublishing {
         name = "Cedar Logger"
         description =
             "Multiplatform Timber-like lightweight and extensible logging library for Kotlin Multiplatform projects. Plant different trees to log to various destinations with beautiful formatting and powerful filtering."
-        url = "https://github.com/ChiliNoodles/Cedar-Logger"
+        url = "https://github.com/Kimplify/Cedar-Logger"
 
         licenses {
             license {
@@ -117,7 +117,7 @@ mavenPublishing {
         }
 
         scm {
-            url = "https://github.com/ChiliNoodles/Cedar-Logger"
+            url = "https://github.com/Kimplify/Cedar-Logger"
         }
     }
 }
