@@ -1,14 +1,14 @@
 package org.kimplify.cedar.logging
 
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 
 class CedarForestTest {
 
@@ -35,22 +35,22 @@ class CedarForestTest {
         assertTrue(Cedar.forest().isEmpty())
     }
 
-        @Test
+    @Test
     fun testPlantSingleTree() = runTest {
         Cedar.plant(mockTree1)
-        
+
         assertEquals(1, Cedar.treeCount)
         assertEquals(1, Cedar.forest().size)
         assertTrue(Cedar.forest().contains(mockTree1))
         assertTrue(mockTree1.isSetup)
     }
 
-        @Test
+    @Test
     fun testPlantMultipleTreesIndividually() = runTest {
         Cedar.plant(mockTree1)
         Cedar.plant(mockTree2)
         Cedar.plant(mockTree3)
-        
+
         assertEquals(3, Cedar.treeCount)
         assertEquals(3, Cedar.forest().size)
         assertTrue(Cedar.forest().containsAll(listOf(mockTree1, mockTree2, mockTree3)))
@@ -59,10 +59,10 @@ class CedarForestTest {
         assertTrue(mockTree3.isSetup)
     }
 
-        @Test
+    @Test
     fun testPlantMultipleTreesAtOnce() = runTest {
         Cedar.plant(mockTree1, mockTree2, mockTree3)
-        
+
         assertEquals(3, Cedar.treeCount)
         assertEquals(3, Cedar.forest().size)
         assertTrue(Cedar.forest().containsAll(listOf(mockTree1, mockTree2, mockTree3)))
@@ -74,9 +74,9 @@ class CedarForestTest {
     @Test
     fun testUprootTree() = runTest {
         Cedar.plant(mockTree1, mockTree2, mockTree3)
-        
+
         Cedar.uproot(mockTree2)
-        
+
         assertEquals(2, Cedar.treeCount)
         assertEquals(2, Cedar.forest().size)
         assertTrue(Cedar.forest().contains(mockTree1))
@@ -90,9 +90,9 @@ class CedarForestTest {
     fun testUprootNonExistentTree() = runTest {
         val nonExistentTree = MockLogTree()
         Cedar.plant(mockTree1)
-        
+
         Cedar.uproot(nonExistentTree)
-        
+
         assertEquals(1, Cedar.treeCount)
         assertTrue(Cedar.forest().contains(mockTree1))
     }
@@ -100,9 +100,9 @@ class CedarForestTest {
     @Test
     fun testClearForest() = runTest {
         Cedar.plant(mockTree1, mockTree2, mockTree3)
-        
+
         Cedar.clearForest()
-        
+
         assertEquals(0, Cedar.treeCount)
         assertTrue(Cedar.forest().isEmpty())
         assertFalse(mockTree1.isSetup)
@@ -132,24 +132,23 @@ class CedarForestTest {
 
     @Test
     fun testLogDistributionWithFilteredTrees() = runTest {
+        mockTree1.setMinPriority(LogPriority.INFO)
+        mockTree2.setMinPriority(LogPriority.DEBUG)
+        mockTree3.setLoggable(false)
 
-            mockTree1.setMinPriority(LogPriority.INFO)
-            mockTree2.setMinPriority(LogPriority.DEBUG)
-            mockTree3.setLoggable(false)
+        Cedar.plant(mockTree1, mockTree2, mockTree3)
 
-            Cedar.plant(mockTree1, mockTree2, mockTree3)
+        Cedar.d("Debug message")
 
-            Cedar.d("Debug message")
+        assertEquals(0, mockTree1.logEntries().size)
+        assertEquals(1, mockTree2.logEntries().size)
+        assertEquals(0, mockTree3.logEntries().size)
 
-            assertEquals(0, mockTree1.logEntries().size)
-            assertEquals(1, mockTree2.logEntries().size)
-            assertEquals(0, mockTree3.logEntries().size)
+        Cedar.i("Info message")
 
-            Cedar.i("Info message")
-
-            assertEquals(1, mockTree1.logEntries().size)
-            assertEquals(2, mockTree2.logEntries().size)
-            assertEquals(0, mockTree3.logEntries().size)
+        assertEquals(1, mockTree1.logEntries().size)
+        assertEquals(2, mockTree2.logEntries().size)
+        assertEquals(0, mockTree3.logEntries().size)
     }
 
     @Test
@@ -299,18 +298,20 @@ class CedarForestTest {
         val jobs = mutableListOf<Job>()
 
         repeat(20) { index ->
-            jobs.add(launch {
-                when (index % 4) {
-                    0 -> Cedar.plant(MockLogTree())
-                    1 -> Cedar.d("Message $index")
-                    2 -> if (Cedar.forest().isNotEmpty()) Cedar.uproot(Cedar.forest().first())
-                    3 -> Cedar.i("Info $index")
+            jobs.add(
+                launch {
+                    when (index % 4) {
+                        0 -> Cedar.plant(MockLogTree())
+                        1 -> Cedar.d("Message $index")
+                        2 -> if (Cedar.forest().isNotEmpty()) Cedar.uproot(Cedar.forest().first())
+                        3 -> Cedar.i("Info $index")
+                    }
                 }
-            })
+            )
         }
 
         jobs.forEach { it.join() }
 
         assertTrue(Cedar.treeCount >= 0)
     }
-} 
+}

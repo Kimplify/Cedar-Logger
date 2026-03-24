@@ -223,4 +223,4 @@ class LogPriorityTest {
         assertFalse(LogPriority.VERBOSE.equals(null))
         assertFalse(LogPriority.VERBOSE.equals("VERBOSE"))
     }
-} 
+}

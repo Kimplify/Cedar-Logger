@@ -1,11 +1,6 @@
 package org.kimplify.cedar.logging
 
-data class LogEntry(
-    val priority: LogPriority,
-    val tag: String,
-    val message: String,
-    val throwable: Throwable?
-)
+data class LogEntry(val priority: LogPriority, val tag: String, val message: String, val throwable: Throwable?)
 
 open class MockLogTree : LogTree {
     private val _logEntries = mutableListOf<LogEntry>()
@@ -36,9 +31,7 @@ open class MockLogTree : LogTree {
         _logEntries.clear()
     }
 
-    override fun isLoggable(tag: String?, priority: LogPriority): Boolean {
-        return _isLoggable && priority >= minPriority
-    }
+    override fun isLoggable(tag: String?, priority: LogPriority): Boolean = _isLoggable && priority >= minPriority
 
     override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
         if (isLoggable(tag, priority)) {
@@ -50,15 +43,11 @@ open class MockLogTree : LogTree {
         _logEntries.clear()
     }
 
-    suspend fun getEntriesWithTag(tag: String): List<LogEntry> {
-        return _logEntries.filter { it.tag == tag }
+    suspend fun getEntriesWithTag(tag: String): List<LogEntry> = _logEntries.filter { it.tag == tag }
+
+    suspend fun getEntriesWithPriority(priority: LogPriority): List<LogEntry> = _logEntries.filter {
+        it.priority == priority
     }
 
-    suspend fun getEntriesWithPriority(priority: LogPriority): List<LogEntry> {
-        return _logEntries.filter { it.priority == priority }
-    }
-
-    suspend fun getEntriesWithThrowable(): List<LogEntry> {
-        return _logEntries.filter { it.throwable != null }
-    }
-} 
+    suspend fun getEntriesWithThrowable(): List<LogEntry> = _logEntries.filter { it.throwable != null }
+}

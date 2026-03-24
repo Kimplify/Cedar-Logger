@@ -10,12 +10,7 @@ class LogTreeTest {
     @Test
     fun testLogTreeDefaultBehavior() {
         val tree = object : LogTree {
-            override fun log(
-                priority: LogPriority,
-                tag: String,
-                message: String,
-                throwable: Throwable?
-            ) {
+            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
             }
         }
 
@@ -41,12 +36,7 @@ class LogTreeTest {
                 teardownCalled = true
             }
 
-            override fun log(
-                priority: LogPriority,
-                tag: String,
-                message: String,
-                throwable: Throwable?
-            ) {
+            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
             }
         }
 
@@ -64,16 +54,9 @@ class LogTreeTest {
     @Test
     fun testLogTreeCustomIsLoggable() {
         val tree = object : LogTree {
-            override fun isLoggable(tag: String?, priority: LogPriority): Boolean {
-                return priority >= LogPriority.WARNING
-            }
+            override fun isLoggable(tag: String?, priority: LogPriority): Boolean = priority >= LogPriority.WARNING
 
-            override fun log(
-                priority: LogPriority,
-                tag: String,
-                message: String,
-                throwable: Throwable?
-            ) {
+            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
             }
         }
 
@@ -89,12 +72,7 @@ class LogTreeTest {
         val loggedEntries = mutableListOf<LogEntry>()
 
         val tree = object : LogTree {
-            override fun log(
-                priority: LogPriority,
-                tag: String,
-                message: String,
-                throwable: Throwable?
-            ) {
+            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
                 loggedEntries.add(LogEntry(priority, tag, message, throwable))
             }
         }
@@ -110,12 +88,7 @@ class LogTreeTest {
         val loggedEntries = mutableListOf<LogEntry>()
 
         val tree = object : LogTree {
-            override fun log(
-                priority: LogPriority,
-                tag: String,
-                message: String,
-                throwable: Throwable?
-            ) {
+            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
                 loggedEntries.add(LogEntry(priority, tag, message, throwable))
             }
         }
@@ -131,12 +104,7 @@ class LogTreeTest {
         val loggedEntries = mutableListOf<LogEntry>()
 
         val tree = object : LogTree {
-            override fun log(
-                priority: LogPriority,
-                tag: String,
-                message: String,
-                throwable: Throwable?
-            ) {
+            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
                 loggedEntries.add(LogEntry(priority, tag, message, throwable))
             }
         }
@@ -162,16 +130,10 @@ class LogTreeTest {
                 teardownCallCount++
             }
 
-            override fun isLoggable(tag: String?, priority: LogPriority): Boolean {
-                return tag != "BLOCKED" && priority >= LogPriority.INFO
-            }
+            override fun isLoggable(tag: String?, priority: LogPriority): Boolean =
+                tag != "BLOCKED" && priority >= LogPriority.INFO
 
-            override fun log(
-                priority: LogPriority,
-                tag: String,
-                message: String,
-                throwable: Throwable?
-            ) {
+            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
                 logCallCount++
             }
         }
@@ -189,4 +151,4 @@ class LogTreeTest {
         customTree.tearDown()
         assertEquals(1, teardownCallCount)
     }
-} 
+}
