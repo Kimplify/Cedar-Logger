@@ -3,18 +3,23 @@ import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 
 plugins {
     alias(libs.plugins.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.multiplatform.library)
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.kotlinNativeCocoaPods)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.kover)
+    // TODO: Re-enable Kover when it supports com.android.kotlin.multiplatform.library
+    // alias(libs.plugins.kover)
 }
 
 kotlin {
     jvmToolchain(libs.versions.javaVersion.get().toInt())
     explicitApi()
 
-    androidTarget { publishLibraryVariants("release") }
+    androidLibrary {
+        namespace = "org.kimplify.cedar"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+    }
 
     listOf(
         iosX64(),
@@ -78,15 +83,6 @@ kotlin {
 
 tasks.withType<KotlinJsTest>().configureEach {
     enabled = false
-}
-
-android {
-    namespace = "org.kimplify.cedar"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
 }
 
 // Publishing your Kotlin Multiplatform library to Maven Central

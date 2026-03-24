@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.multiplatform).apply(false)
-    alias(libs.plugins.android.library).apply(false)
+    alias(libs.plugins.android.multiplatform.library).apply(false)
     alias(libs.plugins.maven.publish).apply(false)
     alias(libs.plugins.android.application).apply(false)
     alias(libs.plugins.kotlinNativeCocoaPods).apply(false)
@@ -12,13 +12,13 @@ plugins {
 }
 
 apiValidation {
-    ignoredProjects.addAll(listOf("sample"))
+    ignoredProjects.addAll(listOf("sample", "androidApp"))
 }
 
 spotless {
     kotlin {
         target("**/*.kt")
-        targetExclude("**/build/**", "sample/**")
+        targetExclude("**/build/**", "sample/**", "androidApp/**")
         ktlint("1.5.0").editorConfigOverride(
             mapOf(
                 "ktlint_standard_backing-property-naming" to "disabled"
