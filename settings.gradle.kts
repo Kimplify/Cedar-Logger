@@ -35,3 +35,4 @@ dependencyResolutionManagement {
 }
 include(":cedar-logging")
 include(":sample")
+include(":androidApp")
