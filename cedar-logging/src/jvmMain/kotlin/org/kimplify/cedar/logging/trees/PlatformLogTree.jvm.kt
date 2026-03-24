@@ -1,26 +1,26 @@
 package org.kimplify.cedar.logging.trees
 
-import org.kimplify.cedar.logging.LogPriority
-import org.kimplify.cedar.logging.LogTree
 import java.util.logging.Level
 import java.util.logging.Logger
+import org.kimplify.cedar.logging.LogPriority
+import org.kimplify.cedar.logging.LogTree
 
-actual class PlatformLogTree actual constructor() : LogTree {
+public actual class PlatformLogTree actual constructor() : LogTree {
     private var logger: Logger = Logger.getLogger(PlatformLogTree::class.java.name)
     private var enableEmojis: Boolean = true
 
-    actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
+    public actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
         val configuration = PlatformLogConfig().apply(config)
-        
+
         configuration.jvmLoggerName?.let {
             logger = Logger.getLogger(it)
         }
         enableEmojis = configuration.enableEmojis
-        
+
         return this
     }
 
-    actual override fun isLoggable(tag: String?, priority: LogPriority): Boolean {
+    public actual override fun isLoggable(tag: String?, priority: LogPriority): Boolean {
         val level = when (priority) {
             LogPriority.VERBOSE, LogPriority.DEBUG -> Level.FINEST
             LogPriority.INFO -> Level.INFO
@@ -30,12 +30,7 @@ actual class PlatformLogTree actual constructor() : LogTree {
         return logger.isLoggable(level)
     }
 
-    actual override fun log(
-        priority: LogPriority,
-        tag: String,
-        message: String,
-        throwable: Throwable?
-    ) {
+    public actual override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
         val symbol = if (enableEmojis) {
             when (priority) {
                 LogPriority.VERBOSE -> "🔍"

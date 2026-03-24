@@ -1,21 +1,25 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.kotlinNativeCocoaPods)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.kover)
 }
 
 kotlin {
     jvmToolchain(libs.versions.javaVersion.get().toInt())
+    explicitApi()
 
     androidTarget { publishLibraryVariants("release") }
 
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64(),
+        iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
             baseName = "CedarLogger"
@@ -49,12 +53,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.datetime)
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         androidMain.dependencies {
@@ -62,7 +66,7 @@ kotlin {
         }
     }
 
-    //https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers
+    // https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
         compilations["main"].compileTaskProvider.configure {
             compilerOptions {
@@ -70,7 +74,10 @@ kotlin {
             }
         }
     }
+}
 
+tasks.withType<KotlinJsTest>().configureEach {
+    enabled = false
 }
 
 android {
@@ -82,8 +89,8 @@ android {
     }
 }
 
-//Publishing your Kotlin Multiplatform library to Maven Central
-//https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-publish-libraries.html
+// Publishing your Kotlin Multiplatform library to Maven Central
+// https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-publish-libraries.html
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()

@@ -1,16 +1,16 @@
 package org.kimplify.cedar.logging
 
+import kotlin.properties.Delegates
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
-import kotlin.properties.Delegates
 
 /**
  * A lightweight, extensible logging system for Kotlin Multiplatform projects.
  */
-class Cedar private constructor() {
+public class Cedar private constructor() {
 
-    companion object Forest {
+    public companion object Forest {
         @OptIn(InternalCoroutinesApi::class)
         private val treeLock = SynchronizedObject()
         private val logTrees = mutableListOf<LogTree>()
@@ -19,14 +19,12 @@ class Cedar private constructor() {
         }
         private var hasPlantedTrees = false
 
-        fun tag(tag: String): TaggedLogger = TaggedLogger(tag)
+        public fun tag(tag: String): TaggedLogger = TaggedLogger(tag)
 
-        fun getLogger(tag: String? = null): TaggedLogger {
-            return TaggedLogger(tag ?: "AppLogger")
-        }
+        public fun getLogger(tag: String? = null): TaggedLogger = TaggedLogger(tag ?: "AppLogger")
 
         @OptIn(InternalCoroutinesApi::class)
-        fun plant(tree: LogTree) {
+        public fun plant(tree: LogTree) {
             tree.setup()
             synchronized(treeLock) {
                 logTrees.add(tree)
@@ -35,7 +33,7 @@ class Cedar private constructor() {
         }
 
         @OptIn(InternalCoroutinesApi::class)
-        fun plant(vararg trees: LogTree) {
+        public fun plant(vararg trees: LogTree) {
             for (tree in trees) {
                 tree.setup()
             }
@@ -50,7 +48,7 @@ class Cedar private constructor() {
          * Remove a previously planted tree
          */
         @OptIn(InternalCoroutinesApi::class)
-        fun uproot(tree: LogTree) {
+        public fun uproot(tree: LogTree) {
             synchronized(treeLock) {
                 if (logTrees.remove(tree)) {
                     tree.tearDown()
@@ -60,7 +58,7 @@ class Cedar private constructor() {
         }
 
         @OptIn(InternalCoroutinesApi::class)
-        fun clearForest() {
+        public fun clearForest() {
             synchronized(treeLock) {
                 logTrees.forEach { it.tearDown() }
                 logTrees.clear()
@@ -69,49 +67,44 @@ class Cedar private constructor() {
         }
 
         @OptIn(InternalCoroutinesApi::class)
-        fun forest(): List<LogTree> {
+        public fun forest(): List<LogTree> {
             synchronized(treeLock) {
                 return logTrees.toList()
             }
         }
 
-        val treeCount: Int
+        public val treeCount: Int
             get() = treeArray.size
 
-        fun v(message: String, throwable: Throwable? = null) {
+        public fun v(message: String, throwable: Throwable? = null) {
             getLogger().v(message, throwable)
         }
 
-        fun d(message: String, throwable: Throwable? = null) {
+        public fun d(message: String, throwable: Throwable? = null) {
             getLogger().d(message, throwable)
         }
 
-        fun i(message: String, throwable: Throwable? = null) {
+        public fun i(message: String, throwable: Throwable? = null) {
             getLogger().i(message, throwable)
         }
 
-        fun w(message: String, throwable: Throwable? = null) {
+        public fun w(message: String, throwable: Throwable? = null) {
             getLogger().w(throwable, message)
         }
 
-        fun w(throwable: Throwable? = null, message: String = "") {
+        public fun w(throwable: Throwable? = null, message: String = "") {
             getLogger().w(throwable, message)
         }
 
-        fun e(throwable: Throwable? = null, message: String = "") {
+        public fun e(throwable: Throwable? = null, message: String = "") {
             getLogger().e(throwable, message)
         }
 
-        fun e(message: String, throwable: Throwable? = null) {
+        public fun e(message: String, throwable: Throwable? = null) {
             getLogger().e(throwable, message)
         }
 
-        internal fun logToAllTrees(
-            priority: LogPriority,
-            tag: String,
-            message: String,
-            throwable: Throwable? = null
-        ) {
+        internal fun logToAllTrees(priority: LogPriority, tag: String, message: String, throwable: Throwable? = null) {
             val trees = treeArray
 
             for (tree in trees) {
