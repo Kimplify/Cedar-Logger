@@ -4,22 +4,21 @@ import android.util.Log
 import org.kimplify.cedar.logging.LogPriority
 import org.kimplify.cedar.logging.LogTree
 
-actual class PlatformLogTree : LogTree {
+public actual class PlatformLogTree : LogTree {
 
     private var maxLogLength = 4_000
     private var enableEmojis: Boolean = true
 
-    actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
+    public actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
         val configuration = PlatformLogConfig().apply(config)
-        
+
         configuration.androidMaxLogLength?.let { maxLogLength = it }
         enableEmojis = configuration.enableEmojis
-        
+
         return this
     }
 
-    private fun String.logChunks(prio: Int, tag: String) =
-        chunked(maxLogLength).forEach { Log.println(prio, tag, it) }
+    private fun String.logChunks(prio: Int, tag: String) = chunked(maxLogLength).forEach { Log.println(prio, tag, it) }
 
     private fun LogPriority.toAndroid(): Int = when (this) {
         LogPriority.VERBOSE -> Log.VERBOSE
@@ -29,14 +28,9 @@ actual class PlatformLogTree : LogTree {
         LogPriority.ERROR -> Log.ERROR
     }
 
-    actual override fun isLoggable(tag: String?, priority: LogPriority) = true
+    public actual override fun isLoggable(tag: String?, priority: LogPriority): Boolean = true
 
-    actual override fun log(
-        priority: LogPriority,
-        tag: String,
-        message: String,
-        throwable: Throwable?
-    ) {
+    public actual override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
         val prio = priority.toAndroid()
         val actualTag = tag
         val safeTag = actualTag.take(23)

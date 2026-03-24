@@ -3,8 +3,7 @@ package org.kimplify.cedar.logging
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-
-class LogScope internal constructor(
+public class LogScope internal constructor(
     private val logger: TaggedLogger,
     private val priority: LogPriority,
     private val message: String,
@@ -13,7 +12,7 @@ class LogScope internal constructor(
     private var isClosed = false
 
     @OptIn(ExperimentalTime::class)
-    override fun close() {
+    public override fun close() {
         if (!isClosed) {
             isClosed = true
             val duration = Clock.System.now().toEpochMilliseconds() - startTime

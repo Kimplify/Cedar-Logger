@@ -5,19 +5,24 @@ appVersionName = "0.2.2"
 
 # SDK Versions
 kotlinxBrowser = "0.5.0"
-minSdk = "21"
+minSdk = "23"
 compileSdk = "36"
 targetSdk = "36"
 javaVersion = "21"
 jvmVersion = "JVM_21"
 
 kotlin = "2.2.20"
-agp = "8.11.0"
+agp = "9.0.1"
 maven-publish = "0.34.0"
 kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.7.1"
-compose = "1.9.1"
+compose = "1.10.3"
 androidx-activityCompose = "1.11.0"
+binary-compatibility-validator = "0.17.0"
+spotless = "7.0.2"
+detekt = "1.23.8"
+dokka = "2.0.0"
+kover = "0.9.1"
 
 [libraries]
 
@@ -38,3 +43,9 @@ kotlinNativeCocoaPods = { id = "org.jetbrains.kotlin.native.cocoapods", version.
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

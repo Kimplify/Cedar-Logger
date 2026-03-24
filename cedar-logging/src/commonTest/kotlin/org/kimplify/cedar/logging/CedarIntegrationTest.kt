@@ -1,13 +1,13 @@
 package org.kimplify.cedar.logging
 
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runTest
 
 class CedarIntegrationTest {
 
@@ -252,7 +252,6 @@ class CedarIntegrationTest {
         val analyticsTree = MockLogTree()
         analyticsTree.setMinPriority(LogPriority.WARNING)
 
-
         Cedar.plant(developmentTree, analyticsTree)
 
         val apiLogger = Cedar.tag("ApiClient")
@@ -274,7 +273,6 @@ class CedarIntegrationTest {
                     dbLogger.d("Executing INSERT")
                     dbLogger.i("User data cached successfully")
                 }
-
             } catch (e: Exception) {
                 apiLogger.e(e, "Request failed")
             }
@@ -330,12 +328,7 @@ class CedarIntegrationTest {
     fun testErrorHandlingInComplexScenario() = runTest {
         val tolerantTree = MockLogTree()
         val strictTree = object : MockLogTree() {
-            override fun log(
-                priority: LogPriority,
-                tag: String,
-                message: String,
-                throwable: Throwable?
-            ) {
+            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
                 if (tag == "FORBIDDEN") {
                     throw RuntimeException("Forbidden tag")
                 }
@@ -358,49 +351,45 @@ class CedarIntegrationTest {
     }
 
     @Test
-    fun testPerformanceWithManyTrees() =
-        runTest {
-            val trees = List(20) { MockLogTree() }
-            Cedar.plant(*trees.toTypedArray())
+    fun testPerformanceWithManyTrees() = runTest {
+        val trees = List(20) { MockLogTree() }
+        Cedar.plant(*trees.toTypedArray())
 
-            val logger = Cedar.tag("PerformanceTest")
+        val logger = Cedar.tag("PerformanceTest")
 
-            repeat(100) { index ->
-                logger.i("Message $index")
-            }
-
-            trees.forEach { tree ->
-                assertEquals(100, tree.logEntries().size)
-            }
-
-            assertEquals(20, Cedar.treeCount)
+        repeat(100) { index ->
+            logger.i("Message $index")
         }
+
+        trees.forEach { tree ->
+            assertEquals(100, tree.logEntries().size)
+        }
+
+        assertEquals(20, Cedar.treeCount)
+    }
 
     @Test
-    fun testComplexFilteringScenario() =
-        runTest {
+    fun testComplexFilteringScenario() = runTest {
+        val debugOnlyTree = MockLogTree()
+        debugOnlyTree.setMinPriority(LogPriority.DEBUG)
+        debugOnlyTree.setLoggable(true)
 
-            val debugOnlyTree = MockLogTree()
-            debugOnlyTree.setMinPriority(LogPriority.DEBUG)
-            debugOnlyTree.setLoggable(true)
-
-            val conditionalTree = object : MockLogTree() {
-                override fun isLoggable(tag: String?, priority: LogPriority): Boolean {
-                    return tag?.startsWith("App") == true && priority >= LogPriority.INFO
-                }
-            }
-
-            Cedar.plant(debugOnlyTree, conditionalTree)
-
-            Cedar.tag("AppService").v("Verbose")
-            Cedar.tag("AppService").d("Debug")
-            Cedar.tag("AppService").i("Info")
-            Cedar.tag("NetworkService").i("Info")
-            Cedar.tag("DatabaseService").w("Warning")
-
-            assertEquals(4, debugOnlyTree.logEntries().size)
-            assertEquals(1, conditionalTree.logEntries().size)
-            assertEquals("AppService", conditionalTree.logEntries().first().tag)
-            assertEquals(LogPriority.INFO, conditionalTree.logEntries().first().priority)
+        val conditionalTree = object : MockLogTree() {
+            override fun isLoggable(tag: String?, priority: LogPriority): Boolean =
+                tag?.startsWith("App") == true && priority >= LogPriority.INFO
         }
-} 
+
+        Cedar.plant(debugOnlyTree, conditionalTree)
+
+        Cedar.tag("AppService").v("Verbose")
+        Cedar.tag("AppService").d("Debug")
+        Cedar.tag("AppService").i("Info")
+        Cedar.tag("NetworkService").i("Info")
+        Cedar.tag("DatabaseService").w("Warning")
+
+        assertEquals(4, debugOnlyTree.logEntries().size)
+        assertEquals(1, conditionalTree.logEntries().size)
+        assertEquals("AppService", conditionalTree.logEntries().first().tag)
+        assertEquals(LogPriority.INFO, conditionalTree.logEntries().first().priority)
+    }
+}

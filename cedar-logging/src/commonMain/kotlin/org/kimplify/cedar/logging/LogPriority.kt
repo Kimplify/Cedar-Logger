@@ -3,18 +3,14 @@ package org.kimplify.cedar.logging
 /**
  * Log priority levels
  */
-enum class LogPriority {
+public enum class LogPriority {
     VERBOSE,
     DEBUG,
     INFO,
     WARNING,
     ERROR;
 
-    operator fun compareTo(other: Int): Int {
-        return ordinal - other
-    }
+    public operator fun compareTo(other: Int): Int = ordinal - other
 
-    fun isAtLeast(other: LogPriority): Boolean {
-        return ordinal >= other.ordinal
-    }
+    public fun isAtLeast(other: LogPriority): Boolean = ordinal >= other.ordinal
 }

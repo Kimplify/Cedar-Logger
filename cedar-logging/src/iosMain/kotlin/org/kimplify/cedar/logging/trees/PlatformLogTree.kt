@@ -1,11 +1,11 @@
 package org.kimplify.cedar.logging.trees
 
-import org.kimplify.cedar.logging.LogPriority
-import org.kimplify.cedar.logging.LogTree
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.autoreleasepool
 import kotlinx.cinterop.ptr
+import org.kimplify.cedar.logging.LogPriority
+import org.kimplify.cedar.logging.LogTree
 import platform.darwin.OS_LOG_DEFAULT
 import platform.darwin.OS_LOG_TYPE_DEBUG
 import platform.darwin.OS_LOG_TYPE_DEFAULT
@@ -17,42 +17,35 @@ import platform.darwin._os_log_internal
 import platform.darwin.os_log_create
 import platform.darwin.os_log_t
 
-
-
 /**
  * iOS-specific debug tree implementation.
  * Uses Apple's os_log for better integration with Xcode console and Console.app.
  * Supports custom subsystems and categories for organized logging.
  */
 @OptIn(ExperimentalForeignApi::class)
-actual class PlatformLogTree : LogTree {
-    
+public actual class PlatformLogTree : LogTree {
+
     private var customLogObject: os_log_t? = null
     private var config: PlatformLogConfig? = null
 
-    actual override fun isLoggable(tag: String?, priority: LogPriority) = true
+    public actual override fun isLoggable(tag: String?, priority: LogPriority): Boolean = true
 
-    actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
+    public actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
         val configuration = PlatformLogConfig().apply(config)
         this.config = configuration
-        
+
         if (configuration.iosSubsystem != null) {
             customLogObject = os_log_create(
                 configuration.iosSubsystem,
                 configuration.iosCategory ?: "General"
             )
         }
-        
+
         return this
     }
 
     @OptIn(BetaInteropApi::class)
-    actual override fun log(
-        priority: LogPriority,
-        tag: String,
-        message: String,
-        throwable: Throwable?
-    ) {
+    public actual override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
         val useEmojis = config?.enableEmojis ?: true
         val symbol = if (useEmojis) {
             when (priority) {

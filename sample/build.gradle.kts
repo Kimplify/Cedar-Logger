@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.multiplatform.library)
 }
 
 kotlin {
@@ -15,7 +15,12 @@ kotlin {
 
     jvmToolchain(libs.versions.javaVersion.get().toInt())
 
-    androidTarget()
+    androidLibrary {
+        namespace = "org.kimplify.sample.shared"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+    }
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -71,27 +76,9 @@ kotlin {
             api(project(":cedar-logging"))
         }
 
-        androidMain.dependencies {
-            implementation(libs.androidx.activityCompose)
-        }
-
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
-    }
-}
-
-android {
-    namespace = "org.kimplify.sample"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 21
-        targetSdk = 36
-
-        applicationId = "org.kimplify.sample"
-        versionCode = 1
-        versionName = "1.0.0"
     }
 }
 

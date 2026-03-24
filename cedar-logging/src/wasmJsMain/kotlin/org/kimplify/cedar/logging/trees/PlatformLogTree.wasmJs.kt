@@ -4,7 +4,7 @@ import org.kimplify.cedar.logging.LogPriority
 import org.kimplify.cedar.logging.LogTree
 
 @JsName("console")
-external object Console {
+internal external object Console {
     fun debug(vararg args: String)
     fun log(vararg args: String)
     fun info(vararg args: String)
@@ -12,25 +12,20 @@ external object Console {
     fun error(vararg args: String)
 }
 
-actual class PlatformLogTree actual constructor() : LogTree {
+public actual class PlatformLogTree actual constructor() : LogTree {
     private var enableEmojis: Boolean = true
 
-    actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
+    public actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
         val configuration = PlatformLogConfig().apply(config)
-        
+
         enableEmojis = configuration.enableEmojis
-        
+
         return this
     }
 
-    actual override fun isLoggable(tag: String?, priority: LogPriority) = true
+    public actual override fun isLoggable(tag: String?, priority: LogPriority): Boolean = true
 
-    actual override fun log(
-        priority: LogPriority,
-        tag: String,
-        message: String,
-        throwable: Throwable?
-    ) {
+    public actual override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
         val symbol = if (enableEmojis) {
             when (priority) {
                 LogPriority.VERBOSE -> "🔍"

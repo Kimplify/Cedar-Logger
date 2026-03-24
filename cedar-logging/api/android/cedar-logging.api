@@ -1,0 +1,117 @@
+public final class org/kimplify/cedar/logging/Cedar {
+	public static final field Forest Lorg/kimplify/cedar/logging/Cedar$Forest;
+}
+
+public final class org/kimplify/cedar/logging/Cedar$Forest {
+	public final fun clearForest ()V
+	public final fun d (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun e (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun forest ()Ljava/util/List;
+	public final fun getLogger (Ljava/lang/String;)Lorg/kimplify/cedar/logging/TaggedLogger;
+	public static synthetic fun getLogger$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;ILjava/lang/Object;)Lorg/kimplify/cedar/logging/TaggedLogger;
+	public final fun getTreeCount ()I
+	public final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun plant (Lorg/kimplify/cedar/logging/LogTree;)V
+	public final fun plant ([Lorg/kimplify/cedar/logging/LogTree;)V
+	public final fun tag (Ljava/lang/String;)Lorg/kimplify/cedar/logging/TaggedLogger;
+	public final fun uproot (Lorg/kimplify/cedar/logging/LogTree;)V
+	public final fun v (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun w (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun w (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class org/kimplify/cedar/logging/LogPriority : java/lang/Enum {
+	public static final field DEBUG Lorg/kimplify/cedar/logging/LogPriority;
+	public static final field ERROR Lorg/kimplify/cedar/logging/LogPriority;
+	public static final field INFO Lorg/kimplify/cedar/logging/LogPriority;
+	public static final field VERBOSE Lorg/kimplify/cedar/logging/LogPriority;
+	public static final field WARNING Lorg/kimplify/cedar/logging/LogPriority;
+	public final fun compareTo (I)I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun isAtLeast (Lorg/kimplify/cedar/logging/LogPriority;)Z
+	public static fun valueOf (Ljava/lang/String;)Lorg/kimplify/cedar/logging/LogPriority;
+	public static fun values ()[Lorg/kimplify/cedar/logging/LogPriority;
+}
+
+public final class org/kimplify/cedar/logging/LogScope : java/lang/AutoCloseable {
+	public fun close ()V
+}
+
+public abstract interface class org/kimplify/cedar/logging/LogTree {
+	public fun isLoggable (Ljava/lang/String;Lorg/kimplify/cedar/logging/LogPriority;)Z
+	public abstract fun log (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun log$default (Lorg/kimplify/cedar/logging/LogTree;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public fun setup ()V
+	public fun tearDown ()V
+}
+
+public final class org/kimplify/cedar/logging/LogTree$DefaultImpls {
+	public static fun isLoggable (Lorg/kimplify/cedar/logging/LogTree;Ljava/lang/String;Lorg/kimplify/cedar/logging/LogPriority;)Z
+	public static synthetic fun log$default (Lorg/kimplify/cedar/logging/LogTree;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static fun setup (Lorg/kimplify/cedar/logging/LogTree;)V
+	public static fun tearDown (Lorg/kimplify/cedar/logging/LogTree;)V
+}
+
+public final class org/kimplify/cedar/logging/TaggedLogger {
+	public final fun d (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun d (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun e (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun log (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun log$default (Lorg/kimplify/cedar/logging/TaggedLogger;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun scope (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;)Lorg/kimplify/cedar/logging/LogScope;
+	public static synthetic fun scope$default (Lorg/kimplify/cedar/logging/TaggedLogger;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;ILjava/lang/Object;)Lorg/kimplify/cedar/logging/LogScope;
+	public final fun v (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun w (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun w (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class org/kimplify/cedar/logging/trees/ConsoleTree : org/kimplify/cedar/logging/LogTree {
+	public fun <init> ()V
+	public fun isLoggable (Ljava/lang/String;Lorg/kimplify/cedar/logging/LogPriority;)Z
+	public fun log (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun setup ()V
+	public fun tearDown ()V
+	public final fun withMinPriority (Lorg/kimplify/cedar/logging/LogPriority;)Lorg/kimplify/cedar/logging/trees/ConsoleTree;
+}
+
+public final class org/kimplify/cedar/logging/trees/PlatformLogConfig {
+	public fun <init> ()V
+	public final fun getAndroidMaxLogLength ()Ljava/lang/Integer;
+	public final fun getEnableEmojis ()Z
+	public final fun getIosCategory ()Ljava/lang/String;
+	public final fun getIosSubsystem ()Ljava/lang/String;
+	public final fun getJvmLoggerName ()Ljava/lang/String;
+	public final fun setAndroidMaxLogLength (Ljava/lang/Integer;)V
+	public final fun setEnableEmojis (Z)V
+	public final fun setIosCategory (Ljava/lang/String;)V
+	public final fun setIosSubsystem (Ljava/lang/String;)V
+	public final fun setJvmLoggerName (Ljava/lang/String;)V
+}
+
+public final class org/kimplify/cedar/logging/trees/PlatformLogTree : org/kimplify/cedar/logging/LogTree {
+	public fun <init> ()V
+	public final fun configureForPlatform (Lkotlin/jvm/functions/Function1;)Lorg/kimplify/cedar/logging/trees/PlatformLogTree;
+	public fun isLoggable (Ljava/lang/String;Lorg/kimplify/cedar/logging/LogPriority;)Z
+	public fun log (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun setup ()V
+	public fun tearDown ()V
+}
+
