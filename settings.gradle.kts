@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 rootProject.name = "Cedar-Logger"
 
 pluginManagement {
@@ -37,4 +35,3 @@ dependencyResolutionManagement {
 }
 include(":cedar-logging")
 include(":sample")
-
