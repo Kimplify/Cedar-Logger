@@ -1,7 +1,7 @@
 [versions]
 
-appVersionCode = "4"
-appVersionName = "0.2.2"
+appVersionCode = "5"
+appVersionName = "0.3.0"
 
 # SDK Versions
 kotlinxBrowser = "0.5.0"
@@ -11,18 +11,18 @@ targetSdk = "36"
 javaVersion = "21"
 jvmVersion = "JVM_21"
 
-kotlin = "2.2.20"
+kotlin = "2.3.20"
 agp = "9.0.1"
-maven-publish = "0.34.0"
+maven-publish = "0.36.0"
 kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.7.1"
 compose = "1.10.3"
-androidx-activityCompose = "1.11.0"
-binary-compatibility-validator = "0.17.0"
-spotless = "7.0.2"
+androidx-activityCompose = "1.13.0"
+binary-compatibility-validator = "0.18.1"
+spotless = "8.4.0"
 detekt = "1.23.8"
-dokka = "2.0.0"
-kover = "0.9.1"
+dokka = "2.1.0"
+kover = "0.9.8"
 
 [libraries]
 
