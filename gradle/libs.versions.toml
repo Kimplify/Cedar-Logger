@@ -1,7 +1,7 @@
 [versions]
 
 appVersionCode = "5"
-appVersionName = "0.3.0"
+appVersionName = "0.2.3"
 
 # SDK Versions
 kotlinxBrowser = "0.5.0"
