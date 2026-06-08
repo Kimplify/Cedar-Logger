@@ -5,17 +5,24 @@ public final class org/kimplify/cedar/logging/Cedar {
 public final class org/kimplify/cedar/logging/Cedar$Forest {
 	public final fun clearForest ()V
 	public final fun d (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun d (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public final fun e (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public final fun e (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun forest ()Ljava/util/List;
+	public final fun getDefaultLogger ()Lorg/kimplify/cedar/logging/TaggedLogger;
 	public final fun getLogger (Ljava/lang/String;)Lorg/kimplify/cedar/logging/TaggedLogger;
 	public static synthetic fun getLogger$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;ILjava/lang/Object;)Lorg/kimplify/cedar/logging/TaggedLogger;
 	public final fun getTreeCount ()I
 	public final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun i (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun logToAllTrees (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public static synthetic fun logToAllTrees$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun plant (Lorg/kimplify/cedar/logging/LogTree;)V
@@ -23,11 +30,15 @@ public final class org/kimplify/cedar/logging/Cedar$Forest {
 	public final fun tag (Ljava/lang/String;)Lorg/kimplify/cedar/logging/TaggedLogger;
 	public final fun uproot (Lorg/kimplify/cedar/logging/LogTree;)V
 	public final fun v (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun v (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun w (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public final fun w (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public final fun w (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 }
 
 public final class org/kimplify/cedar/logging/LogPriority : java/lang/Enum {
@@ -64,24 +75,36 @@ public final class org/kimplify/cedar/logging/LogTree$DefaultImpls {
 public final class org/kimplify/cedar/logging/TaggedLogger {
 	public final fun d (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public final fun d (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public final fun d (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public final fun e (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public final fun e (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun e$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public final fun getLogTag ()Ljava/lang/String;
 	public final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun i (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public final fun i (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun log (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public static synthetic fun log$default (Lorg/kimplify/cedar/logging/TaggedLogger;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun scope (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;)Lorg/kimplify/cedar/logging/LogScope;
 	public static synthetic fun scope$default (Lorg/kimplify/cedar/logging/TaggedLogger;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;ILjava/lang/Object;)Lorg/kimplify/cedar/logging/LogScope;
 	public final fun v (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public final fun v (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public final fun v (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun w (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public final fun w (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public final fun w (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun w$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 }
 
 public final class org/kimplify/cedar/logging/trees/ConsoleTree : org/kimplify/cedar/logging/LogTree {

@@ -13,11 +13,13 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 @OptIn(ExperimentalAtomicApi::class)
 public class Cedar private constructor() {
 
+    @Suppress("TooManyFunctions")
     public companion object Forest {
         private val treesRef = AtomicReference<Array<LogTree>>(emptyArray())
 
         /** Cached logger used for untagged top-level calls, avoiding per-call allocation. */
-        private val defaultLogger = TaggedLogger("AppLogger")
+        @PublishedApi
+        internal val defaultLogger: TaggedLogger = TaggedLogger("AppLogger")
 
         public fun tag(tag: String): TaggedLogger = TaggedLogger(tag)
 
@@ -82,17 +84,28 @@ public class Cedar private constructor() {
             defaultLogger.w(message, throwable)
         }
 
-        public fun w(throwable: Throwable? = null, message: String = "") {
+        public fun w(throwable: Throwable, message: String = "") {
             defaultLogger.w(throwable, message)
         }
 
-        public fun e(throwable: Throwable? = null, message: String = "") {
+        public fun e(throwable: Throwable, message: String = "") {
             defaultLogger.e(throwable, message)
         }
 
         public fun e(message: String, throwable: Throwable? = null) {
             defaultLogger.e(message, throwable)
         }
+
+        public inline fun v(throwable: Throwable? = null, message: () -> String): Unit =
+            getLogger().v(throwable, message)
+        public inline fun d(throwable: Throwable? = null, message: () -> String): Unit =
+            getLogger().d(throwable, message)
+        public inline fun i(throwable: Throwable? = null, message: () -> String): Unit =
+            getLogger().i(throwable, message)
+        public inline fun w(throwable: Throwable? = null, message: () -> String): Unit =
+            getLogger().w(throwable, message)
+        public inline fun e(throwable: Throwable? = null, message: () -> String): Unit =
+            getLogger().e(throwable, message)
 
         @PublishedApi
         internal fun logToAllTrees(priority: LogPriority, tag: String, message: String, throwable: Throwable? = null) {
