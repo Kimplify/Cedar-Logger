@@ -58,3 +58,9 @@ jobs:
 
       - name: Run iOS simulator tests
         run: ./gradlew :cedar-logging:iosSimulatorArm64Test
+
+      - name: Run JS (Node) tests
+        run: ./gradlew :cedar-logging:jsNodeTest
+
+      - name: Run wasmJs (Node) tests
+        run: ./gradlew :cedar-logging:wasmJsNodeTest

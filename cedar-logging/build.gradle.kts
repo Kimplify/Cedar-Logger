@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 
 plugins {
     alias(libs.plugins.multiplatform)
@@ -47,11 +46,13 @@ kotlin {
     wasmJs {
         outputModuleName.set("CedarLogger")
         browser()
+        nodejs()
         binaries.executable()
     }
 
     js(IR) {
         browser()
+        nodejs()
         binaries.executable()
     }
 
@@ -71,10 +72,6 @@ kotlin {
             }
         }
     }
-}
-
-tasks.withType<KotlinJsTest>().configureEach {
-    enabled = false
 }
 
 // Publishing your Kotlin Multiplatform library to Maven Central
