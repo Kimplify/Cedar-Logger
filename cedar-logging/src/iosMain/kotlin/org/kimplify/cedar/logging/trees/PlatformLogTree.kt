@@ -12,7 +12,6 @@ import platform.darwin.OS_LOG_DEFAULT
 import platform.darwin.OS_LOG_TYPE_DEBUG
 import platform.darwin.OS_LOG_TYPE_DEFAULT
 import platform.darwin.OS_LOG_TYPE_ERROR
-import platform.darwin.OS_LOG_TYPE_FAULT
 import platform.darwin.OS_LOG_TYPE_INFO
 import platform.darwin.__dso_handle
 import platform.darwin._os_log_internal
@@ -65,10 +64,10 @@ private class IosLogTree(private val config: PlatformLogConfig) : LogTree {
     }
 
     private fun mapToOsLogType(priority: LogPriority): UByte = when (priority) {
-        LogPriority.VERBOSE -> OS_LOG_TYPE_DEFAULT
+        LogPriority.VERBOSE -> OS_LOG_TYPE_DEBUG
         LogPriority.DEBUG -> OS_LOG_TYPE_DEBUG
         LogPriority.INFO -> OS_LOG_TYPE_INFO
-        LogPriority.WARNING -> OS_LOG_TYPE_ERROR
-        LogPriority.ERROR -> OS_LOG_TYPE_FAULT
+        LogPriority.WARNING -> OS_LOG_TYPE_DEFAULT
+        LogPriority.ERROR -> OS_LOG_TYPE_ERROR
     }
 }

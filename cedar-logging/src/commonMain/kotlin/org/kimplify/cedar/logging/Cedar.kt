@@ -97,15 +97,15 @@ public class Cedar private constructor() {
         }
 
         public inline fun v(throwable: Throwable? = null, message: () -> String): Unit =
-            getLogger().v(throwable, message)
+            defaultLogger.v(throwable, message)
         public inline fun d(throwable: Throwable? = null, message: () -> String): Unit =
-            getLogger().d(throwable, message)
+            defaultLogger.d(throwable, message)
         public inline fun i(throwable: Throwable? = null, message: () -> String): Unit =
-            getLogger().i(throwable, message)
+            defaultLogger.i(throwable, message)
         public inline fun w(throwable: Throwable? = null, message: () -> String): Unit =
-            getLogger().w(throwable, message)
+            defaultLogger.w(throwable, message)
         public inline fun e(throwable: Throwable? = null, message: () -> String): Unit =
-            getLogger().e(throwable, message)
+            defaultLogger.e(throwable, message)
 
         @PublishedApi
         internal fun logToAllTrees(priority: LogPriority, tag: String?, message: String, throwable: Throwable? = null) {

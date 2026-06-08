@@ -16,10 +16,6 @@ public class ConsoleTree : LogTree {
     public override fun isLoggable(tag: String?, priority: LogPriority): Boolean = priority >= minPriority
 
     public override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
-        if (!isLoggable(tag, priority)) {
-            return
-        }
-
         val priorityName = priority.name.padEnd(7)
         println("${priority.symbol(emojis = true)} $priorityName [${tag ?: DEFAULT_TAG}] $message")
 

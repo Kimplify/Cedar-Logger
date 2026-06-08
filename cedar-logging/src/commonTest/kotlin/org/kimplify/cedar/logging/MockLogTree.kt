@@ -5,7 +5,7 @@ data class LogEntry(val priority: LogPriority, val tag: String?, val message: St
 open class MockLogTree : LogTree {
     private val _logEntries = mutableListOf<LogEntry>()
 
-    suspend fun logEntries(): List<LogEntry> = _logEntries.toList()
+    fun logEntries(): List<LogEntry> = _logEntries.toList()
 
     private var _isSetup = false
     private var _isLoggable = true
@@ -39,15 +39,15 @@ open class MockLogTree : LogTree {
         }
     }
 
-    suspend fun clear() {
+    fun clear() {
         _logEntries.clear()
     }
 
-    suspend fun getEntriesWithTag(tag: String?): List<LogEntry> = _logEntries.filter { it.tag == tag }
+    fun getEntriesWithTag(tag: String?): List<LogEntry> = _logEntries.filter { it.tag == tag }
 
-    suspend fun getEntriesWithPriority(priority: LogPriority): List<LogEntry> = _logEntries.filter {
+    fun getEntriesWithPriority(priority: LogPriority): List<LogEntry> = _logEntries.filter {
         it.priority == priority
     }
 
-    suspend fun getEntriesWithThrowable(): List<LogEntry> = _logEntries.filter { it.throwable != null }
+    fun getEntriesWithThrowable(): List<LogEntry> = _logEntries.filter { it.throwable != null }
 }

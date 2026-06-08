@@ -5,7 +5,6 @@ import kotlin.time.ExperimentalTime
 import org.kimplify.cedar.logging.Cedar.Forest.logToAllTrees
 
 public class TaggedLogger internal constructor(@PublishedApi internal val logTag: String?) {
-    // --- Eager, message-first (primary) ---
     public fun v(message: String, throwable: Throwable? = null): Unit =
         logToAllTrees(LogPriority.VERBOSE, logTag, message, throwable)
     public fun d(message: String, throwable: Throwable? = null): Unit =
@@ -17,7 +16,6 @@ public class TaggedLogger internal constructor(@PublishedApi internal val logTag
     public fun e(message: String, throwable: Throwable? = null): Unit =
         logToAllTrees(LogPriority.ERROR, logTag, message, throwable)
 
-    // --- Eager, throwable-first (non-null throwable -> unambiguous) ---
     public fun v(throwable: Throwable, message: String = ""): Unit =
         logToAllTrees(LogPriority.VERBOSE, logTag, message, throwable)
     public fun d(throwable: Throwable, message: String = ""): Unit =
@@ -29,7 +27,6 @@ public class TaggedLogger internal constructor(@PublishedApi internal val logTag
     public fun e(throwable: Throwable, message: String = ""): Unit =
         logToAllTrees(LogPriority.ERROR, logTag, message, throwable)
 
-    // --- Lazy (message built only when a tree is planted) ---
     public inline fun v(throwable: Throwable? = null, message: () -> String) {
         if (Cedar.treeCount != 0) logToAllTrees(LogPriority.VERBOSE, logTag, message(), throwable)
     }

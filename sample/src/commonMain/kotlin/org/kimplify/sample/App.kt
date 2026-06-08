@@ -58,9 +58,6 @@ fun App() {
     val uiTree = remember { UITree { logMessages = logMessages + it } }
     val scope = rememberCoroutineScope()
 
-    // FIXME: Adjust landscape detection for wasmJs
-//    val configuration = LocalConfiguration.current
-//    val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
     val isLandscape = false
     LaunchedEffect(Unit) {
         Cedar.plant(platformLogTree {
@@ -89,7 +86,6 @@ fun App() {
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Simple Title Bar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
