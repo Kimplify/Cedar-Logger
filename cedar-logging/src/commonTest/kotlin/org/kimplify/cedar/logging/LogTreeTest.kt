@@ -68,7 +68,7 @@ class LogTreeTest {
     }
 
     @Test
-    fun testLogTreeWithNullTag() {
+    fun testLogTreeWithNonNullTag() {
         val loggedEntries = mutableListOf<LogEntry>()
 
         val tree = object : LogTree {
@@ -81,6 +81,22 @@ class LogTreeTest {
 
         assertEquals(1, loggedEntries.size)
         assertEquals("TestTag", loggedEntries[0].tag)
+    }
+
+    @Test
+    fun testLogTreeWithNullTag() {
+        val loggedEntries = mutableListOf<LogEntry>()
+
+        val tree = object : LogTree {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
+                loggedEntries.add(LogEntry(priority, tag, message, throwable))
+            }
+        }
+
+        tree.log(LogPriority.INFO, null, "Message", null)
+
+        assertEquals(1, loggedEntries.size)
+        assertEquals(null, loggedEntries[0].tag)
     }
 
     @Test
