@@ -31,7 +31,7 @@ Multiplatform Timber-like lightweight and extensible logging library for Kotlin 
 ### Installation
 ```kotlin
 dependencies {
-    implementation("org.kimplify:cedar-logging:0.2.0")
+    implementation("org.kimplify:cedar-logging:0.3.0")
 }
 ```
 
@@ -42,20 +42,20 @@ dependencies {
 // In your iOS app's build.gradle.kts
 listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { target ->
     target.binaries.framework {
-        export("org.kimplify:cedar-logging:0.2.0")
+        export("org.kimplify:cedar-logging:0.3.0")
         baseName = "YourApp"
         isStatic = true
     }
 }
 
 // In commonMain dependencies
-api("org.kimplify:cedar-logging:0.2.0")
+api("org.kimplify:cedar-logging:0.3.0")
 ```
 
 #### Option 2: CocoaPods Integration
 ```ruby
 # In your Podfile
-pod 'CedarLogger', :git => 'https://github.com/ChiliNoodles/Cedar-Logger.git', :tag => 'v0.2.0'
+pod 'CedarLogger', :git => 'https://github.com/ChiliNoodles/Cedar-Logger.git', :tag => 'v0.3.0'
 ```
 
 ### Basic Usage
@@ -80,6 +80,14 @@ Cedar.tag("Performance").scope("Loading data").use {
 }
 ```
 
+### Lazy Logging
+```kotlin
+// Message is only built if at least one tree is planted
+Cedar.d { "Expensive: ${computeExpensiveDebugInfo()}" }
+Cedar.tag("Net").e(throwable) { "Request failed for $url" }
+```
+The lambda overloads avoid string-building work when logging is disabled (no trees planted), so expensive interpolation never runs in production builds that don't plant a tree.
+
 ## 🌳 Built-in Trees
 
 ### ConsoleTree
@@ -94,12 +102,12 @@ Uses platform-specific logging APIs for optimal performance. Supports platform-s
 
 #### Basic Usage
 ```kotlin
-Cedar.plant(PlatformLogTree())
+Cedar.plant(platformLogTree())
 ```
 
 #### Advanced Configuration
 ```kotlin
-Cedar.plant(PlatformLogTree().configureForPlatform {
+Cedar.plant(platformLogTree {
     iosSubsystem = "com.myapp.network"
     iosCategory = "API"
     androidMaxLogLength = 2000
@@ -128,7 +136,7 @@ import com.chilinoodles.cedar.logging.LogTree
 import com.chilinoodles.cedar.logging.LogPriority
 
 class SentryTree : LogTree {
-    override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+    override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
         val sentryLevel = when (priority) {
             LogPriority.VERBOSE, LogPriority.DEBUG -> SentryLevel.DEBUG
             LogPriority.INFO -> SentryLevel.INFO
@@ -163,7 +171,7 @@ import com.chilinoodles.cedar.logging.LogPriority
 class CrashlyticsTree : LogTree {
     private val crashlytics = FirebaseCrashlytics.getInstance()
     
-    override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+    override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
         crashlytics.setCustomKey("last_log_tag", tag)
         crashlytics.setCustomKey("last_log_priority", priority.name)
         
@@ -256,13 +264,13 @@ Cedar Logger is published to Maven Central and ready for production use:
 ### Dependency Information
 ```kotlin
 // Kotlin Multiplatform
-implementation("org.kimplify:cedar-logging:0.2.0")
+implementation("org.kimplify:cedar-logging:0.3.0")
 
 // Android only
-implementation("org.kimplify:cedar-logging-android:0.2.0")
+implementation("org.kimplify:cedar-logging-android:0.3.0")
 
 // JVM only  
-implementation("org.kimplify:cedar-logging-jvm:0.2.0")
+implementation("org.kimplify:cedar-logging-jvm:0.3.0")
 ```
 
 ### Platform Support
@@ -276,6 +284,13 @@ implementation("org.kimplify:cedar-logging-jvm:0.2.0")
 - **Min iOS**: 12.0
 - **Type**: Static framework
 - **Architectures**: arm64, x64, simulator
+
+## 🔀 Migrating to 0.3.0
+
+- Tags are now nullable end-to-end: `null` means untagged (previously the default tag was `"AppLogger"`), and `LogTree.log` / `LogTree.isLoggable` now take `tag: String?`.
+- The throwable-first logging overloads now take a non-null `Throwable` (use the message-first overloads when there is no throwable).
+- The `PlatformLogTree()` class was replaced by the `platformLogTree { }` factory function.
+- `LogPriority.compareTo(Int)` was removed; compare against other `LogPriority` values instead.
 
 ## 📝 License
 

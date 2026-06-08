@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2026-06-09
 
 ### Added
 
@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.editorconfig` for consistent code style
 - `explicitApi()` mode for stricter API visibility
 - `androidApp` module as the Android entry point (replacing embedded Android source sets)
+- Inline lazy-message logging overloads (`Cedar.d { "..." }`, `logger.e(throwable) { "..." }`) that skip string-building when no tree is planted
+- JS and wasmJs unit tests, executed with the Node runner
+- Signed Maven Central publications
 
 ### Changed
 
@@ -23,10 +26,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated AGP to 9.0.1, Gradle to 9.1, Compose to 1.10.3, Kotlin to 2.2.20
 - Updated Gradle wrapper
 - Applied Spotless formatting across the codebase
+- **Breaking:** `LogTree.log` and `LogTree.isLoggable` now take a nullable `tag: String?`; the default (untagged) tag is now `null` instead of `"AppLogger"`
+- **Breaking:** Normalized the logging overloads — message-first is now the primary form, and the throwable-first overloads now take a non-null `Throwable`
+- **Breaking:** The `PlatformLogTree` class was replaced by the `platformLogTree { }` factory function (returns a `LogTree`); `PlatformLogConfig` is retained
+
+### Removed
+
+- `LogPriority.compareTo(Int)`
+- `kotlinx-coroutines` and `kotlinx-datetime` runtime dependencies (the library now uses `kotlin.concurrent.atomics` and the stdlib `kotlin.time.Clock`)
 
 ### Fixed
 
 - Removed broken CI tasks (`testReleaseUnitTest`, `koverHtmlReport`) that no longer exist after AGP 9 migration
+- Tree-registry thread-safety and visibility, using a lock-free `AtomicReference` copy-on-write registry (no more `@InternalCoroutinesApi`)
 
 ## [0.2.2] - 2025-03-11
 
@@ -69,7 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CocoaPods support
 - Maven Central publishing
 
-[Unreleased]: https://github.com/Kimplify/Cedar-Logger/compare/0.2.2...HEAD
+[0.3.0]: https://github.com/Kimplify/Cedar-Logger/compare/0.2.2...0.3.0
 [0.2.2]: https://github.com/Kimplify/Cedar-Logger/compare/0.2.1...0.2.2
 [0.2.1]: https://github.com/Kimplify/Cedar-Logger/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/Kimplify/Cedar-Logger/compare/0.1.0...0.2.0
