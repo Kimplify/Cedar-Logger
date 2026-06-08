@@ -18,11 +18,11 @@ public class TaggedLogger internal constructor(@PublishedApi internal val logTag
         logToAllTrees(LogPriority.ERROR, logTag, message, throwable)
 
     // --- Eager, throwable-first (non-null throwable -> unambiguous) ---
-    public fun v(throwable: Throwable, message: String): Unit =
+    public fun v(throwable: Throwable, message: String = ""): Unit =
         logToAllTrees(LogPriority.VERBOSE, logTag, message, throwable)
-    public fun d(throwable: Throwable, message: String): Unit =
+    public fun d(throwable: Throwable, message: String = ""): Unit =
         logToAllTrees(LogPriority.DEBUG, logTag, message, throwable)
-    public fun i(throwable: Throwable, message: String): Unit =
+    public fun i(throwable: Throwable, message: String = ""): Unit =
         logToAllTrees(LogPriority.INFO, logTag, message, throwable)
     public fun w(throwable: Throwable, message: String = ""): Unit =
         logToAllTrees(LogPriority.WARNING, logTag, message, throwable)

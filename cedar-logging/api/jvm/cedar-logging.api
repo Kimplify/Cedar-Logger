@@ -77,6 +77,7 @@ public final class org/kimplify/cedar/logging/TaggedLogger {
 	public final fun d (Ljava/lang/Throwable;Ljava/lang/String;)V
 	public final fun d (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
 	public static synthetic fun d$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public final fun e (Ljava/lang/Throwable;Ljava/lang/String;)V
@@ -89,6 +90,7 @@ public final class org/kimplify/cedar/logging/TaggedLogger {
 	public final fun i (Ljava/lang/Throwable;Ljava/lang/String;)V
 	public final fun i (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
 	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun log (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public static synthetic fun log$default (Lorg/kimplify/cedar/logging/TaggedLogger;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
@@ -98,6 +100,7 @@ public final class org/kimplify/cedar/logging/TaggedLogger {
 	public final fun v (Ljava/lang/Throwable;Ljava/lang/String;)V
 	public final fun v (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
 	public static synthetic fun v$default (Lorg/kimplify/cedar/logging/TaggedLogger;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public final fun w (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public final fun w (Ljava/lang/Throwable;Ljava/lang/String;)V
