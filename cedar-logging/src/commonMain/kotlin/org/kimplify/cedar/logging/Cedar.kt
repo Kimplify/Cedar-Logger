@@ -19,7 +19,7 @@ public class Cedar private constructor() {
 
         /** Cached logger used for untagged top-level calls, avoiding per-call allocation. */
         @PublishedApi
-        internal val defaultLogger: TaggedLogger = TaggedLogger("AppLogger")
+        internal val defaultLogger: TaggedLogger = TaggedLogger(null)
 
         public fun tag(tag: String): TaggedLogger = TaggedLogger(tag)
 
@@ -108,7 +108,7 @@ public class Cedar private constructor() {
             getLogger().e(throwable, message)
 
         @PublishedApi
-        internal fun logToAllTrees(priority: LogPriority, tag: String, message: String, throwable: Throwable? = null) {
+        internal fun logToAllTrees(priority: LogPriority, tag: String?, message: String, throwable: Throwable? = null) {
             val trees = treesRef.load()
             for (tree in trees) {
                 if (tree.isLoggable(tag, priority)) {

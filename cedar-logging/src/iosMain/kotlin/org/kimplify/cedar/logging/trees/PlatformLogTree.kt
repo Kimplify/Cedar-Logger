@@ -6,6 +6,8 @@ import kotlinx.cinterop.autoreleasepool
 import kotlinx.cinterop.ptr
 import org.kimplify.cedar.logging.LogPriority
 import org.kimplify.cedar.logging.LogTree
+import org.kimplify.cedar.logging.internal.DEFAULT_TAG
+import org.kimplify.cedar.logging.internal.symbol
 import platform.darwin.OS_LOG_DEFAULT
 import platform.darwin.OS_LOG_TYPE_DEBUG
 import platform.darwin.OS_LOG_TYPE_DEFAULT
@@ -45,32 +47,13 @@ public actual class PlatformLogTree : LogTree {
     }
 
     @OptIn(BetaInteropApi::class)
-    public actual override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+    public actual override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
         val useEmojis = config?.enableEmojis ?: true
-        val symbol = if (useEmojis) {
-            when (priority) {
-                LogPriority.VERBOSE -> "🔍"
-                LogPriority.DEBUG -> "🐞"
-                LogPriority.INFO -> "ℹ️"
-                LogPriority.WARNING -> "⚠️"
-                LogPriority.ERROR -> "❌"
-            }
-        } else {
-            when (priority) {
-                LogPriority.VERBOSE -> "V"
-                LogPriority.DEBUG -> "D"
-                LogPriority.INFO -> "I"
-                LogPriority.WARNING -> "W"
-                LogPriority.ERROR -> "E"
-            }
-        }
-
-        val header = "$symbol [$tag]"
-        val body = message
+        val header = "${priority.symbol(useEmojis)} [${tag ?: DEFAULT_TAG}]"
         val errorDump = throwable?.stackTraceToString()
         val allText = buildList {
             add(header)
-            add(body)
+            add(message)
             if (errorDump != null) add(errorDump)
         }.joinToString(" ")
 

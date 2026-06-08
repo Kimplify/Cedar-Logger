@@ -35,7 +35,7 @@ public class PlatformLogConfig {
  */
 public expect class PlatformLogTree() : LogTree {
     public override fun isLoggable(tag: String?, priority: LogPriority): Boolean
-    public override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?)
+    public override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?)
 
     /**
      * Configure platform-specific logging options.

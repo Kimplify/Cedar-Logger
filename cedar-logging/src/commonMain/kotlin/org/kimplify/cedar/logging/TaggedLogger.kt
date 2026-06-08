@@ -4,7 +4,7 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import org.kimplify.cedar.logging.Cedar.Forest.logToAllTrees
 
-public class TaggedLogger internal constructor(@PublishedApi internal val logTag: String) {
+public class TaggedLogger internal constructor(@PublishedApi internal val logTag: String?) {
     // --- Eager, message-first (primary) ---
     public fun v(message: String, throwable: Throwable? = null): Unit =
         logToAllTrees(LogPriority.VERBOSE, logTag, message, throwable)

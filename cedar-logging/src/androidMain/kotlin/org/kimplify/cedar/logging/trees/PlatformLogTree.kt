@@ -3,6 +3,8 @@ package org.kimplify.cedar.logging.trees
 import android.util.Log
 import org.kimplify.cedar.logging.LogPriority
 import org.kimplify.cedar.logging.LogTree
+import org.kimplify.cedar.logging.internal.DEFAULT_TAG
+import org.kimplify.cedar.logging.internal.symbol
 
 public actual class PlatformLogTree : LogTree {
 
@@ -30,31 +32,12 @@ public actual class PlatformLogTree : LogTree {
 
     public actual override fun isLoggable(tag: String?, priority: LogPriority): Boolean = true
 
-    public actual override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+    public actual override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
         val prio = priority.toAndroid()
-        val actualTag = tag
-        val safeTag = actualTag.take(23)
-
-        val symbol = if (enableEmojis) {
-            when (priority) {
-                LogPriority.VERBOSE -> "🔍"
-                LogPriority.DEBUG -> "🐞"
-                LogPriority.INFO -> "ℹ️"
-                LogPriority.WARNING -> "⚠️"
-                LogPriority.ERROR -> "❌"
-            }
-        } else {
-            when (priority) {
-                LogPriority.VERBOSE -> "V"
-                LogPriority.DEBUG -> "D"
-                LogPriority.INFO -> "I"
-                LogPriority.WARNING -> "W"
-                LogPriority.ERROR -> "E"
-            }
-        }
+        val safeTag = (tag ?: DEFAULT_TAG).take(23)
 
         val full = buildString {
-            append("$symbol $message")
+            append("${priority.symbol(enableEmojis)} $message")
             throwable?.let {
                 appendLine()
                 append(Log.getStackTraceString(it))
