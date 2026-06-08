@@ -34,7 +34,6 @@ public final class org/kimplify/cedar/logging/LogPriority : java/lang/Enum {
 	public static final field INFO Lorg/kimplify/cedar/logging/LogPriority;
 	public static final field VERBOSE Lorg/kimplify/cedar/logging/LogPriority;
 	public static final field WARNING Lorg/kimplify/cedar/logging/LogPriority;
-	public final fun compareTo (I)I
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun isAtLeast (Lorg/kimplify/cedar/logging/LogPriority;)Z
 	public static fun valueOf (Ljava/lang/String;)Lorg/kimplify/cedar/logging/LogPriority;
