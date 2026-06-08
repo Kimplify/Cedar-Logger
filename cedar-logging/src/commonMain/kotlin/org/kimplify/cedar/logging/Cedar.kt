@@ -1,112 +1,102 @@
 package org.kimplify.cedar.logging
 
-import kotlin.properties.Delegates
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.internal.SynchronizedObject
-import kotlinx.coroutines.internal.synchronized
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 /**
  * A lightweight, extensible logging system for Kotlin Multiplatform projects.
+ *
+ * The set of planted [LogTree]s is stored in a lock-free copy-on-write array: reads
+ * (the hot logging path) never take a lock, and writes (plant/uproot/clear) publish a
+ * fresh array via compare-and-set so concurrent readers always see a consistent snapshot.
  */
+@OptIn(ExperimentalAtomicApi::class)
 public class Cedar private constructor() {
 
     public companion object Forest {
-        @OptIn(InternalCoroutinesApi::class)
-        private val treeLock = SynchronizedObject()
-        private val logTrees = mutableListOf<LogTree>()
-        private var treeArray: Array<LogTree> by Delegates.observable(emptyArray()) { _, _, _ ->
-            hasPlantedTrees = treeArray.isNotEmpty()
-        }
-        private var hasPlantedTrees = false
+        private val treesRef = AtomicReference<Array<LogTree>>(emptyArray())
+
+        /** Cached logger used for untagged top-level calls, avoiding per-call allocation. */
+        private val defaultLogger = TaggedLogger("AppLogger")
 
         public fun tag(tag: String): TaggedLogger = TaggedLogger(tag)
 
-        public fun getLogger(tag: String? = null): TaggedLogger = TaggedLogger(tag ?: "AppLogger")
+        public fun getLogger(tag: String? = null): TaggedLogger = if (tag == null) defaultLogger else TaggedLogger(tag)
 
-        @OptIn(InternalCoroutinesApi::class)
         public fun plant(tree: LogTree) {
             tree.setup()
-            synchronized(treeLock) {
-                logTrees.add(tree)
-                treeArray = logTrees.toTypedArray()
+            while (true) {
+                val old = treesRef.load()
+                if (treesRef.compareAndSet(old, old + tree)) return
             }
         }
 
-        @OptIn(InternalCoroutinesApi::class)
         public fun plant(vararg trees: LogTree) {
             for (tree in trees) {
                 tree.setup()
             }
-
-            synchronized(treeLock) {
-                logTrees.addAll(trees)
-                treeArray = logTrees.toTypedArray()
+            while (true) {
+                val old = treesRef.load()
+                if (treesRef.compareAndSet(old, old + trees)) return
             }
         }
 
-        /**
-         * Remove a previously planted tree
-         */
-        @OptIn(InternalCoroutinesApi::class)
+        /** Remove a previously planted tree (the first matching instance). */
         public fun uproot(tree: LogTree) {
-            synchronized(treeLock) {
-                if (logTrees.remove(tree)) {
+            while (true) {
+                val old = treesRef.load()
+                val index = old.indexOf(tree)
+                if (index < 0) return
+                val updated = ArrayList<LogTree>(old.size - 1)
+                old.forEachIndexed { i, t -> if (i != index) updated.add(t) }
+                if (treesRef.compareAndSet(old, updated.toTypedArray())) {
                     tree.tearDown()
-                    treeArray = logTrees.toTypedArray()
+                    return
                 }
             }
         }
 
-        @OptIn(InternalCoroutinesApi::class)
         public fun clearForest() {
-            synchronized(treeLock) {
-                logTrees.forEach { it.tearDown() }
-                logTrees.clear()
-                treeArray = emptyArray()
-            }
+            val old = treesRef.exchange(emptyArray())
+            old.forEach { it.tearDown() }
         }
 
-        @OptIn(InternalCoroutinesApi::class)
-        public fun forest(): List<LogTree> {
-            synchronized(treeLock) {
-                return logTrees.toList()
-            }
-        }
+        public fun forest(): List<LogTree> = treesRef.load().toList()
 
         public val treeCount: Int
-            get() = treeArray.size
+            get() = treesRef.load().size
 
         public fun v(message: String, throwable: Throwable? = null) {
-            getLogger().v(message, throwable)
+            defaultLogger.v(message, throwable)
         }
 
         public fun d(message: String, throwable: Throwable? = null) {
-            getLogger().d(message, throwable)
+            defaultLogger.d(message, throwable)
         }
 
         public fun i(message: String, throwable: Throwable? = null) {
-            getLogger().i(message, throwable)
+            defaultLogger.i(message, throwable)
         }
 
         public fun w(message: String, throwable: Throwable? = null) {
-            getLogger().w(throwable, message)
+            defaultLogger.w(message, throwable)
         }
 
         public fun w(throwable: Throwable? = null, message: String = "") {
-            getLogger().w(throwable, message)
+            defaultLogger.w(throwable, message)
         }
 
         public fun e(throwable: Throwable? = null, message: String = "") {
-            getLogger().e(throwable, message)
+            defaultLogger.e(throwable, message)
         }
 
         public fun e(message: String, throwable: Throwable? = null) {
-            getLogger().e(throwable, message)
+            defaultLogger.e(message, throwable)
         }
 
+        @PublishedApi
         internal fun logToAllTrees(priority: LogPriority, tag: String, message: String, throwable: Throwable? = null) {
-            val trees = treeArray
-
+            val trees = treesRef.load()
             for (tree in trees) {
                 if (tree.isLoggable(tag, priority)) {
                     tree.log(priority, tag, message, throwable)

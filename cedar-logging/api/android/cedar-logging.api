@@ -16,6 +16,8 @@ public final class org/kimplify/cedar/logging/Cedar$Forest {
 	public final fun getTreeCount ()I
 	public final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public static synthetic fun i$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun logToAllTrees (Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun logToAllTrees$default (Lorg/kimplify/cedar/logging/Cedar$Forest;Lorg/kimplify/cedar/logging/LogPriority;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun plant (Lorg/kimplify/cedar/logging/LogTree;)V
 	public final fun plant ([Lorg/kimplify/cedar/logging/LogTree;)V
 	public final fun tag (Ljava/lang/String;)Lorg/kimplify/cedar/logging/TaggedLogger;
