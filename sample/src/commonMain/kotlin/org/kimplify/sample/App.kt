@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import org.kimplify.cedar.logging.Cedar
 import org.kimplify.cedar.logging.LogPriority
 import org.kimplify.cedar.logging.LogTree
-import org.kimplify.cedar.logging.trees.PlatformLogTree
+import org.kimplify.cedar.logging.trees.platformLogTree
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -63,7 +63,7 @@ fun App() {
 //    val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
     val isLandscape = false
     LaunchedEffect(Unit) {
-        Cedar.plant(PlatformLogTree().configureForPlatform {
+        Cedar.plant(platformLogTree {
             iosSubsystem = "CedarLogger"
             enableEmojis = true
         })

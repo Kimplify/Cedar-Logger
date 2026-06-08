@@ -17,7 +17,10 @@ import platform.darwin.OS_LOG_TYPE_INFO
 import platform.darwin.__dso_handle
 import platform.darwin._os_log_internal
 import platform.darwin.os_log_create
-import platform.darwin.os_log_t
+
+@OptIn(ExperimentalForeignApi::class)
+public actual fun platformLogTree(configure: PlatformLogConfig.() -> Unit): LogTree =
+    IosLogTree(PlatformLogConfig().apply(configure))
 
 /**
  * iOS-specific debug tree implementation.
@@ -25,31 +28,20 @@ import platform.darwin.os_log_t
  * Supports custom subsystems and categories for organized logging.
  */
 @OptIn(ExperimentalForeignApi::class)
-public actual class PlatformLogTree : LogTree {
+private class IosLogTree(private val config: PlatformLogConfig) : LogTree {
 
-    private var customLogObject: os_log_t? = null
-    private var config: PlatformLogConfig? = null
-
-    public actual override fun isLoggable(tag: String?, priority: LogPriority): Boolean = true
-
-    public actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
-        val configuration = PlatformLogConfig().apply(config)
-        this.config = configuration
-
-        if (configuration.iosSubsystem != null) {
-            customLogObject = os_log_create(
-                configuration.iosSubsystem,
-                configuration.iosCategory ?: "General"
-            )
+    private val customLogObject =
+        if (config.iosSubsystem != null) {
+            os_log_create(config.iosSubsystem, config.iosCategory ?: "General")
+        } else {
+            null
         }
 
-        return this
-    }
+    override fun isLoggable(tag: String?, priority: LogPriority): Boolean = true
 
     @OptIn(BetaInteropApi::class)
-    public actual override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
-        val useEmojis = config?.enableEmojis ?: true
-        val header = "${priority.symbol(useEmojis)} [${tag ?: DEFAULT_TAG}]"
+    override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
+        val header = "${priority.symbol(config.enableEmojis)} [${tag ?: DEFAULT_TAG}]"
         val errorDump = throwable?.stackTraceToString()
         val allText = buildList {
             add(header)
