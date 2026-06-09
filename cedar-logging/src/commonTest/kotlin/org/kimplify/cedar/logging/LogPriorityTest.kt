@@ -113,21 +113,6 @@ class LogPriorityTest {
     }
 
     @Test
-    fun testCustomCompareToIntMethod() {
-        assertEquals(-1, LogPriority.VERBOSE.compareTo(1))
-        assertEquals(0, LogPriority.DEBUG.compareTo(1))
-        assertEquals(1, LogPriority.INFO.compareTo(1))
-        assertEquals(2, LogPriority.WARNING.compareTo(1))
-        assertEquals(3, LogPriority.ERROR.compareTo(1))
-
-        assertEquals(-4, LogPriority.VERBOSE.compareTo(4))
-        assertEquals(-3, LogPriority.DEBUG.compareTo(4))
-        assertEquals(-2, LogPriority.INFO.compareTo(4))
-        assertEquals(-1, LogPriority.WARNING.compareTo(4))
-        assertEquals(0, LogPriority.ERROR.compareTo(4))
-    }
-
-    @Test
     fun testIsAtLeastMethod() {
         assertTrue(LogPriority.ERROR.isAtLeast(LogPriority.VERBOSE))
         assertTrue(LogPriority.ERROR.isAtLeast(LogPriority.DEBUG))

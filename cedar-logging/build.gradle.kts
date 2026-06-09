@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 
 plugins {
     alias(libs.plugins.multiplatform)
@@ -15,7 +14,7 @@ kotlin {
     jvmToolchain(libs.versions.javaVersion.get().toInt())
     explicitApi()
 
-    androidLibrary {
+    android {
         namespace = "org.kimplify.cedar"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
@@ -47,27 +46,21 @@ kotlin {
     wasmJs {
         outputModuleName.set("CedarLogger")
         browser()
+        nodejs()
         binaries.executable()
     }
 
     js(IR) {
         browser()
+        nodejs()
         binaries.executable()
     }
 
     sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.datetime)
-        }
-
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.kotlinx.coroutines.android)
         }
     }
 
@@ -79,10 +72,6 @@ kotlin {
             }
         }
     }
-}
-
-tasks.withType<KotlinJsTest>().configureEach {
-    enabled = false
 }
 
 // Publishing your Kotlin Multiplatform library to Maven Central

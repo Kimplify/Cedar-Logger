@@ -1,7 +1,7 @@
 package org.kimplify.cedar.logging
 
 /**
- * Log priority levels
+ * Log priority levels, ordered from least to most severe.
  */
 public enum class LogPriority {
     VERBOSE,
@@ -10,7 +10,6 @@ public enum class LogPriority {
     WARNING,
     ERROR;
 
-    public operator fun compareTo(other: Int): Int = ordinal - other
-
+    /** Returns true if this priority is at least as severe as [other]. */
     public fun isAtLeast(other: LogPriority): Boolean = ordinal >= other.ordinal
 }

@@ -2,292 +2,188 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Kotlin-Multiplatform-blue?style=for-the-badge&logo=kotlin"/>
-  <img src="https://img.shields.io/badge/Platform-Android%20|%20iOS%20|%20JVM%20|%20wasmJs-green?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Platforms-Android%20·%20iOS%20·%20JVM%20·%20JS%20·%20wasmJs-green?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/License-Apache%202.0-yellow?style=for-the-badge"/>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white"/>
-  <img src="https://img.shields.io/badge/iOS-000000?style=flat-square&logo=ios&logoColor=white"/>
-  <img src="https://img.shields.io/badge/JVM-ED8B00?style=flat-square&logo=openjdk&logoColor=white"/>
-  <img src="https://img.shields.io/badge/wasmJs-654FF0?style=flat-square&logo=webassembly&logoColor=white"/>
-</p>
+A lightweight, Timber-style logging library for Kotlin Multiplatform. **Plant trees** to send logs wherever you want — the platform console, a crash reporter, your own UI — with tagging, scoped timing, and zero-cost lazy messages.
 
-Multiplatform Timber-like lightweight and extensible logging library for Kotlin Multiplatform projects. Plant different trees to log to various destinations with beautiful formatting and powerful filtering.
+If you've used [Timber](https://github.com/JakeWharton/timber), the API will feel immediately familiar.
 
-> **🚀 Familiar API**: If you've used [Timber](https://github.com/JakeWharton/timber) before, you'll feel right at home! Cedar Logger uses the same intuitive API but extends it to support Kotlin Multiplatform, making migration simple and straightforward.
+## Why Cedar
 
-## ✨ Features
+- **Truly multiplatform** — Android, iOS, JVM, JS, and wasmJs from one API.
+- **Zero runtime dependencies** — no coroutines, no datetime; just the Kotlin stdlib.
+- **Lock-free and thread-safe** — the tree registry uses a copy-on-write atomic, so logging never blocks.
+- **Pluggable trees** — built-in console and platform-native trees, or write your own in a few lines.
+- **Zero-cost when disabled** — lazy `{ }` overloads skip string building when nothing is listening.
 
-- **Multiple Log Levels**: VERBOSE, DEBUG, INFO, WARNING, ERROR
-- **Tagged Logging**: Organize logs by categories
-- **Scoped Logging**: Automatic timing for operations
-- **Tree Architecture**: Extensible output destinations
-- **Thread-Safe**: Concurrent logging support
-- **Multiplatform**: Android, iOS, JVM, and wasmJs support
+## Install
 
-## 🚀 Quick Start
-
-### Installation
 ```kotlin
 dependencies {
-    implementation("org.kimplify:cedar-logging:0.2.0")
+    implementation("org.kimplify:cedar-logging:0.3.0")
 }
 ```
 
-### iOS Integration Options
+Gradle metadata resolves the right variant per target automatically — `cedar-logging` is all you need in `commonMain`.
 
-#### Option 1: Direct Framework Export (Recommended)
+<details>
+<summary><b>iOS integration (framework export / CocoaPods)</b></summary>
+
+**Framework export (recommended)** — use Cedar directly from Swift:
+
 ```kotlin
-// In your iOS app's build.gradle.kts
+// iOS app build.gradle.kts
 listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { target ->
     target.binaries.framework {
-        export("org.kimplify:cedar-logging:0.2.0")
+        export("org.kimplify:cedar-logging:0.3.0")
         baseName = "YourApp"
         isStatic = true
     }
 }
 
-// In commonMain dependencies
-api("org.kimplify:cedar-logging:0.2.0")
+// commonMain
+api("org.kimplify:cedar-logging:0.3.0")
 ```
 
-#### Option 2: CocoaPods Integration
+**CocoaPods:**
+
 ```ruby
-# In your Podfile
-pod 'CedarLogger', :git => 'https://github.com/ChiliNoodles/Cedar-Logger.git', :tag => 'v0.2.0'
+pod 'CedarLogger', :git => 'https://github.com/Kimplify/Cedar-Logger.git', :tag => 'v0.3.0'
 ```
 
-### Basic Usage
+Framework: `CedarLogger` · static · min iOS 12.0 · arm64 + x64 + simulator.
+</details>
+
+## Quick start
+
 ```kotlin
-// Plant a tree
-Cedar.plant(ConsoleTree())
+// Plant a tree once, at startup
+Cedar.plant(platformLogTree())   // logs to Logcat / os_log / java.util.logging / console
 
-// Log messages
-Cedar.v("Verbose message")
 Cedar.d("Debug message")
-Cedar.i("Info message")
-Cedar.w("Warning message")
-Cedar.e("Error message")
+Cedar.i("App started")
+Cedar.e(throwable, "Something failed")
+```
 
-// Tagged logging
-Cedar.tag("Network").i("API call successful")
+## Logging
+
+```kotlin
+// Levels
+Cedar.v("Verbose")
+Cedar.d("Debug")
+Cedar.i("Info")
+Cedar.w("Warning")
+Cedar.e("Error")
+
+// With a throwable (throwable-first or message-first both work)
+Cedar.e(exception, "Checkout failed")
+Cedar.w("Retrying request", exception)
+
+// Tags — group logs by area
+Cedar.tag("Network").i("API call succeeded")
 Cedar.tag("Database").d("Query executed")
 
-// Scoped logging with timing
-Cedar.tag("Performance").scope("Loading data").use {
-    // Your operation here - automatically logs start/end and duration
+// Lazy — the lambda runs only if a tree is planted
+Cedar.d { "Expensive: ${dumpState()}" }
+Cedar.tag("Net").e(throwable) { "Request failed for $url" }
+
+// Scoped timing — logs start, end, and elapsed time
+Cedar.tag("Startup").scope(message = "Warm cache").use {
+    warmCache()
 }
 ```
 
-## 🌳 Built-in Trees
+> **Lazy logging** is the recommended default for hot paths and expensive messages: when no tree is planted, the `{ }` lambda is never invoked, so the string is never built.
 
-### ConsoleTree
-Beautiful console output with icons and colors.
+## Built-in trees
+
+### `platformLogTree`
+
+Routes to each platform's native facility (Logcat, `os_log`, `java.util.logging`, `console`) and is configurable:
+
 ```kotlin
-Cedar.plant(ConsoleTree().withMinPriority(LogPriority.DEBUG))
-```
-Output: `🐛 DEBUG   [Network] API call completed successfully`
-
-### PlatformLogTree
-Uses platform-specific logging APIs for optimal performance. Supports platform-specific configuration for advanced features.
-
-#### Basic Usage
-```kotlin
-Cedar.plant(PlatformLogTree())
-```
-
-#### Advanced Configuration
-```kotlin
-Cedar.plant(PlatformLogTree().configureForPlatform {
-    iosSubsystem = "com.myapp.network"
+Cedar.plant(platformLogTree {
+    iosSubsystem = "com.myapp.network"   // groups logs in Console.app
     iosCategory = "API"
-    androidMaxLogLength = 2000
+    androidMaxLogLength = 2000           // chunk long Logcat lines
     jvmLoggerName = "MyApp.Logger"
     enableEmojis = true
 })
 ```
 
-**Platform-Specific Features:**
-- **iOS**: Custom subsystems and categories for better organization in Console.app
-- **Android**: Configurable max log length
-- **JVM**: Custom logger names for java.util.logging integration
-- **All platforms**: Configurable emoji support
+### `ConsoleTree`
 
-> **📱 iOS/Swift Usage**: Cedar Logger can be used directly in Swift code via framework export. See [iOS/Swift Usage Guide](docs/ios-swift-usage.md) for detailed examples.
+Plain `println` output with level icons — handy for tests and simple JVM/JS targets:
 
-## 🔧 Creating Custom Trees
-
-Creating your own logging destinations is simple. Here are practical examples for popular services:
-
-### Sentry Tree Example
 ```kotlin
-import io.sentry.Sentry
-import io.sentry.SentryLevel
-import com.chilinoodles.cedar.logging.LogTree
-import com.chilinoodles.cedar.logging.LogPriority
+Cedar.plant(ConsoleTree().withMinPriority(LogPriority.DEBUG))
+// 🐞 DEBUG   [Network] API call completed
+```
 
-class SentryTree : LogTree {
-    override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
-        val sentryLevel = when (priority) {
-            LogPriority.VERBOSE, LogPriority.DEBUG -> SentryLevel.DEBUG
-            LogPriority.INFO -> SentryLevel.INFO
-            LogPriority.WARNING -> SentryLevel.WARNING
-            LogPriority.ERROR -> SentryLevel.ERROR
-        }
-        
-        Sentry.configureScope { scope ->
-            scope.setTag("logger_tag", tag)
-            scope.setLevel(sentryLevel)
-        }
-        
-        when {
-            throwable != null -> Sentry.captureException(throwable)
-            priority >= LogPriority.ERROR -> Sentry.captureMessage(message, sentryLevel)
-            else -> Sentry.addBreadcrumb(message)
-        }
+## Custom trees
+
+A tree is anything that implements `LogTree.log`. Route logs to a crash reporter, a file, an analytics pipeline, or your UI:
+
+```kotlin
+import org.kimplify.cedar.logging.LogPriority
+import org.kimplify.cedar.logging.LogTree
+
+class CrashReportingTree : LogTree {
+    // Only forward warnings and errors to the reporter
+    override fun isLoggable(tag: String?, priority: LogPriority): Boolean =
+        priority.isAtLeast(LogPriority.WARNING)
+
+    override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
+        val label = tag ?: "App"
+        Reporter.log(priority.name, label, message)
+        if (throwable != null) Reporter.recordException(throwable)
     }
 }
 
-// Usage
-Cedar.plant(SentryTree())
-Cedar.tag("Payment").e("Credit card processing failed", exception)
+Cedar.plant(CrashReportingTree())
 ```
 
-### Firebase Crashlytics Tree Example
+`setup()` and `tearDown()` hooks are available for trees that need initialization or cleanup.
+
+## Managing trees
+
 ```kotlin
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.chilinoodles.cedar.logging.LogTree
-import com.chilinoodles.cedar.logging.LogPriority
+Cedar.plant(ConsoleTree(), CrashReportingTree())   // plant several at once
+Cedar.treeCount                                    // how many are planted
 
-class CrashlyticsTree : LogTree {
-    private val crashlytics = FirebaseCrashlytics.getInstance()
-    
-    override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
-        crashlytics.setCustomKey("last_log_tag", tag)
-        crashlytics.setCustomKey("last_log_priority", priority.name)
-        
-        val logMessage = "[$tag] $message"
-        
-        when {
-            throwable != null -> {
-                crashlytics.log(logMessage)
-                crashlytics.recordException(throwable)
-            }
-            priority >= LogPriority.WARNING -> {
-                crashlytics.log(logMessage)
-                if (priority == LogPriority.ERROR) {
-                    crashlytics.recordException(RuntimeException(message))
-                }
-            }
-            else -> crashlytics.log(logMessage)
-        }
-    }
-}
-
-// Usage
-Cedar.plant(CrashlyticsTree())
-Cedar.tag("Auth").e("Login failed", authException)
+val tree = ConsoleTree()
+Cedar.plant(tree)
+Cedar.uproot(tree)                                 // remove one
+Cedar.clearForest()                                // remove all
 ```
 
-## 📱 Interactive Demo
+All planted trees receive every log; each decides via `isLoggable` what to keep.
 
-The project includes a beautiful sample app demonstrating all features:
+## Demo app
 
-- **Tabbed Interface**: Controls, Live Logs, and Code Examples
-- **Real-time Logging**: See logs appear instantly
-- **Tree Management**: Test planting and removing trees
-- **Material Design**: Modern, responsive UI
+A Compose Multiplatform sample (Android / iOS / JVM / wasmJs) shows live logging, tagging, scoped timing, and tree management:
 
-### Running the Demo
 ```bash
-./gradlew :sample:run
+./gradlew :sample:run          # JVM desktop
 ```
 
-## 🔧 Advanced Usage
+## Migrating to 0.3.0
 
-### Multiple Trees
-```kotlin
-Cedar.plant(ConsoleTree())
-Cedar.plant(SentryTree())
-Cedar.plant(CrashlyticsTree())
-// All trees receive the same logs
-```
+- **Nullable tags.** `LogTree.log` / `isLoggable` now take `tag: String?`; untagged logs pass `null` (previously the sentinel `"AppLogger"`).
+- **Throwable-first overloads** take a non-null `Throwable` — use the message-first overloads when there is no throwable.
+- **`platformLogTree { }`** factory replaces the old `PlatformLogTree()` class.
+- **`LogPriority.compareTo(Int)` removed** — compare against other `LogPriority` values (or use `isAtLeast`).
 
-### Tree Management
-```kotlin
-// Check planted trees
-println("Trees: ${Cedar.treeCount}")
+## License
 
-// Remove all trees
-Cedar.clearForest()
+Apache License, Version 2.0. See [LICENSE](LICENSE).
 
-// Remove specific tree
-val sentryTree = SentryTree()
-Cedar.plant(sentryTree)
-Cedar.uproot(sentryTree)
-```
+## Acknowledgments
 
-### Exception Handling
-```kotlin
-try {
-    riskyOperation()
-} catch (e: Exception) {
-    Cedar.tag("CriticalError").e(e, "Operation failed")
-    // Logged to all planted trees
-}
-```
-
-## 📚 API Reference
-
-| Method | Description |
-|--------|-------------|
-| `Cedar.plant(tree)` | Add logging tree |
-| `Cedar.tag(name)` | Create tagged logger |
-| `Cedar.v/d/i/w/e()` | Log messages |
-| `Cedar.clearForest()` | Remove all trees |
-| `Cedar.uproot(tree)` | Remove specific tree |
-| `Cedar.treeCount` | Get planted tree count |
-
-## 📦 Maven Central Publishing
-
-Cedar Logger is published to Maven Central and ready for production use:
-
-### Dependency Information
-```kotlin
-// Kotlin Multiplatform
-implementation("org.kimplify:cedar-logging:0.2.0")
-
-// Android only
-implementation("org.kimplify:cedar-logging-android:0.2.0")
-
-// JVM only  
-implementation("org.kimplify:cedar-logging-jvm:0.2.0")
-```
-
-### Platform Support
-- ✅ **Android**: AAR with ProGuard rules
-- ✅ **iOS**: Static framework + CocoaPods
-- ✅ **JVM**: JAR for desktop/server
-- ✅ **wasmJs**: WebAssembly for browsers
-
-### iOS Framework
-- **Name**: `CedarLogger`
-- **Min iOS**: 12.0
-- **Type**: Static framework
-- **Architectures**: arm64, x64, simulator
-
-## 📝 License
-
-This project is licensed under the Apache License, Version 2.0.
-
-## 🌟 Acknowledgments
-
-- Inspired by [Timber](https://github.com/JakeWharton/timber) for Android
-- Built with [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)
+Inspired by [Timber](https://github.com/JakeWharton/timber), built on [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html).
 
 ---
 
-<p align="center">
-  Made with ❤️ for the Kotlin Multiplatform community
-</p>
+<p align="center">Made with ❤️ for the Kotlin Multiplatform community</p>

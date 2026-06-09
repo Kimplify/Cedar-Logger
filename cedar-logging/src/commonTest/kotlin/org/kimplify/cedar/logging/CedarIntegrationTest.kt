@@ -240,7 +240,7 @@ class CedarIntegrationTest {
         assertEquals(1, errorOnlyTree.logEntries().size)
 
         debugTree.logEntries().forEach { entry ->
-            assertEquals("AppLogger", entry.tag)
+            assertEquals(null, entry.tag)
         }
     }
 
@@ -328,7 +328,7 @@ class CedarIntegrationTest {
     fun testErrorHandlingInComplexScenario() = runTest {
         val tolerantTree = MockLogTree()
         val strictTree = object : MockLogTree() {
-            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
                 if (tag == "FORBIDDEN") {
                     throw RuntimeException("Forbidden tag")
                 }

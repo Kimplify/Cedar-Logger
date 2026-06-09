@@ -125,7 +125,7 @@ class CedarForestTest {
 
         mockTree1.logEntries().forEach { entry ->
             assertEquals(LogPriority.DEBUG, entry.priority)
-            assertEquals("AppLogger", entry.tag)
+            assertEquals(null, entry.tag)
             assertEquals("Test message", entry.message)
         }
     }

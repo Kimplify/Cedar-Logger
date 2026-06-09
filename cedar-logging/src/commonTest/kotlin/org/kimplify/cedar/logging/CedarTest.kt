@@ -334,4 +334,44 @@ class CedarTest {
             assertEquals(null, entry.throwable)
         }
     }
+
+    @Test
+    fun testLazyMessageNotEvaluatedWhenNoTreeLoggable() = runTest {
+        Cedar.clearForest()
+        var built = 0
+        Cedar.d {
+            built++
+            "expensive"
+        }
+        assertEquals(0, built)
+    }
+
+    @Test
+    fun testLazyMessageEvaluatedWhenTreePlanted() = runTest {
+        Cedar.clearForest()
+        Cedar.plant(mockTree)
+        var built = 0
+        Cedar.tag("Lazy").d {
+            built++
+            "cheap"
+        }
+        assertEquals(1, built)
+        assertEquals(1, mockTree.logEntries().size)
+        assertEquals("cheap", mockTree.logEntries().first().message)
+        assertEquals("Lazy", mockTree.logEntries().first().tag)
+    }
+
+    @Test
+    fun testLazyMessageWithThrowable() = runTest {
+        Cedar.clearForest()
+        Cedar.plant(mockTree)
+        val exception = RuntimeException("boom")
+        Cedar.tag("Lazy").e(exception) { "failed" }
+        assertEquals(1, mockTree.logEntries().size)
+        with(mockTree.logEntries().first()) {
+            assertEquals(LogPriority.ERROR, priority)
+            assertEquals("failed", message)
+            assertEquals(exception, throwable)
+        }
+    }
 }

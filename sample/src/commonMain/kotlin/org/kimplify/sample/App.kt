@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import org.kimplify.cedar.logging.Cedar
 import org.kimplify.cedar.logging.LogPriority
 import org.kimplify.cedar.logging.LogTree
-import org.kimplify.cedar.logging.trees.PlatformLogTree
+import org.kimplify.cedar.logging.trees.platformLogTree
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -58,12 +58,9 @@ fun App() {
     val uiTree = remember { UITree { logMessages = logMessages + it } }
     val scope = rememberCoroutineScope()
 
-    // FIXME: Adjust landscape detection for wasmJs
-//    val configuration = LocalConfiguration.current
-//    val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
     val isLandscape = false
     LaunchedEffect(Unit) {
-        Cedar.plant(PlatformLogTree().configureForPlatform {
+        Cedar.plant(platformLogTree {
             iosSubsystem = "CedarLogger"
             enableEmojis = true
         })
@@ -89,7 +86,6 @@ fun App() {
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Simple Title Bar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -417,7 +413,7 @@ fun LogCard(log: LogMessage) {
                     fontWeight = FontWeight.Medium
                 )
 
-                if (log.tag != "AppLogger") {
+                if (log.tag != null) {
                     Row(
                         modifier = Modifier.padding(top = 2.dp),
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -451,13 +447,13 @@ fun LogCard(log: LogMessage) {
 
 data class LogMessage(
     val priority: LogPriority,
-    val tag: String,
+    val tag: String?,
     val message: String,
     val icon: String
 )
 
 class UITree(private val onLog: (LogMessage) -> Unit) : LogTree {
-    override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+    override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
         val icon = when (priority) {
             LogPriority.VERBOSE -> "🔍"
             LogPriority.DEBUG -> "🐛"

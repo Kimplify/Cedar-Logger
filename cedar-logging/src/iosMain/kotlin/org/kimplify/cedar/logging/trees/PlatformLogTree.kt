@@ -6,16 +6,20 @@ import kotlinx.cinterop.autoreleasepool
 import kotlinx.cinterop.ptr
 import org.kimplify.cedar.logging.LogPriority
 import org.kimplify.cedar.logging.LogTree
+import org.kimplify.cedar.logging.internal.DEFAULT_TAG
+import org.kimplify.cedar.logging.internal.symbol
 import platform.darwin.OS_LOG_DEFAULT
 import platform.darwin.OS_LOG_TYPE_DEBUG
 import platform.darwin.OS_LOG_TYPE_DEFAULT
 import platform.darwin.OS_LOG_TYPE_ERROR
-import platform.darwin.OS_LOG_TYPE_FAULT
 import platform.darwin.OS_LOG_TYPE_INFO
 import platform.darwin.__dso_handle
 import platform.darwin._os_log_internal
 import platform.darwin.os_log_create
-import platform.darwin.os_log_t
+
+@OptIn(ExperimentalForeignApi::class)
+public actual fun platformLogTree(configure: PlatformLogConfig.() -> Unit): LogTree =
+    IosLogTree(PlatformLogConfig().apply(configure))
 
 /**
  * iOS-specific debug tree implementation.
@@ -23,54 +27,24 @@ import platform.darwin.os_log_t
  * Supports custom subsystems and categories for organized logging.
  */
 @OptIn(ExperimentalForeignApi::class)
-public actual class PlatformLogTree : LogTree {
+private class IosLogTree(private val config: PlatformLogConfig) : LogTree {
 
-    private var customLogObject: os_log_t? = null
-    private var config: PlatformLogConfig? = null
-
-    public actual override fun isLoggable(tag: String?, priority: LogPriority): Boolean = true
-
-    public actual fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree {
-        val configuration = PlatformLogConfig().apply(config)
-        this.config = configuration
-
-        if (configuration.iosSubsystem != null) {
-            customLogObject = os_log_create(
-                configuration.iosSubsystem,
-                configuration.iosCategory ?: "General"
-            )
+    private val customLogObject =
+        if (config.iosSubsystem != null) {
+            os_log_create(config.iosSubsystem, config.iosCategory ?: "General")
+        } else {
+            null
         }
 
-        return this
-    }
+    override fun isLoggable(tag: String?, priority: LogPriority): Boolean = true
 
     @OptIn(BetaInteropApi::class)
-    public actual override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
-        val useEmojis = config?.enableEmojis ?: true
-        val symbol = if (useEmojis) {
-            when (priority) {
-                LogPriority.VERBOSE -> "🔍"
-                LogPriority.DEBUG -> "🐞"
-                LogPriority.INFO -> "ℹ️"
-                LogPriority.WARNING -> "⚠️"
-                LogPriority.ERROR -> "❌"
-            }
-        } else {
-            when (priority) {
-                LogPriority.VERBOSE -> "V"
-                LogPriority.DEBUG -> "D"
-                LogPriority.INFO -> "I"
-                LogPriority.WARNING -> "W"
-                LogPriority.ERROR -> "E"
-            }
-        }
-
-        val header = "$symbol [$tag]"
-        val body = message
+    override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
+        val header = "${priority.symbol(config.enableEmojis)} [${tag ?: DEFAULT_TAG}]"
         val errorDump = throwable?.stackTraceToString()
         val allText = buildList {
             add(header)
-            add(body)
+            add(message)
             if (errorDump != null) add(errorDump)
         }.joinToString(" ")
 
@@ -90,10 +64,10 @@ public actual class PlatformLogTree : LogTree {
     }
 
     private fun mapToOsLogType(priority: LogPriority): UByte = when (priority) {
-        LogPriority.VERBOSE -> OS_LOG_TYPE_DEFAULT
+        LogPriority.VERBOSE -> OS_LOG_TYPE_DEBUG
         LogPriority.DEBUG -> OS_LOG_TYPE_DEBUG
         LogPriority.INFO -> OS_LOG_TYPE_INFO
-        LogPriority.WARNING -> OS_LOG_TYPE_ERROR
-        LogPriority.ERROR -> OS_LOG_TYPE_FAULT
+        LogPriority.WARNING -> OS_LOG_TYPE_DEFAULT
+        LogPriority.ERROR -> OS_LOG_TYPE_ERROR
     }
 }

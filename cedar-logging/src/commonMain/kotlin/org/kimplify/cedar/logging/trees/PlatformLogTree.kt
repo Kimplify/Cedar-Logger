@@ -1,11 +1,12 @@
+@file:Suppress("MatchingDeclarationName")
+
 package org.kimplify.cedar.logging.trees
 
-import org.kimplify.cedar.logging.LogPriority
 import org.kimplify.cedar.logging.LogTree
 
 /**
  * Platform-specific configuration for logging behavior.
- * Contains configuration options for all platforms, but each platform will only apply relevant settings.
+ * Each platform applies only the settings relevant to it.
  */
 public class PlatformLogConfig {
     public var iosSubsystem: String? = null
@@ -19,27 +20,17 @@ public class PlatformLogConfig {
 }
 
 /**
- * Debug tree that provides platform-specific optimized logging.
- * Each platform has a specific implementation that takes advantage of native capabilities.
+ * Creates a [LogTree] that logs through the current platform's native facility
+ * (Logcat on Android, os_log on iOS, java.util.logging on JVM, console on JS/Wasm).
  *
  * Usage:
  * ```
- * // Basic usage (works on all platforms)
- * Cedar.plant(PlatformLogTree())
+ * Cedar.plant(platformLogTree())
  *
- * // Platform-specific configuration
- * Cedar.plant(PlatformLogTree().configureForPlatform {
- *     // Platform-specific options will be available here
+ * Cedar.plant(platformLogTree {
+ *     iosSubsystem = "com.example.app"
+ *     enableEmojis = true
  * })
  * ```
  */
-public expect class PlatformLogTree() : LogTree {
-    public override fun isLoggable(tag: String?, priority: LogPriority): Boolean
-    public override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?)
-
-    /**
-     * Configure platform-specific logging options.
-     * This method allows platform-specific customization without breaking the common API.
-     */
-    public fun configureForPlatform(config: PlatformLogConfig.() -> Unit): PlatformLogTree
-}
+public expect fun platformLogTree(configure: PlatformLogConfig.() -> Unit = {}): LogTree

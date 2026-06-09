@@ -10,7 +10,7 @@ class LogTreeTest {
     @Test
     fun testLogTreeDefaultBehavior() {
         val tree = object : LogTree {
-            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
             }
         }
 
@@ -36,7 +36,7 @@ class LogTreeTest {
                 teardownCalled = true
             }
 
-            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
             }
         }
 
@@ -56,7 +56,7 @@ class LogTreeTest {
         val tree = object : LogTree {
             override fun isLoggable(tag: String?, priority: LogPriority): Boolean = priority >= LogPriority.WARNING
 
-            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
             }
         }
 
@@ -68,11 +68,11 @@ class LogTreeTest {
     }
 
     @Test
-    fun testLogTreeWithNullTag() {
+    fun testLogTreeWithNonNullTag() {
         val loggedEntries = mutableListOf<LogEntry>()
 
         val tree = object : LogTree {
-            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
                 loggedEntries.add(LogEntry(priority, tag, message, throwable))
             }
         }
@@ -84,11 +84,27 @@ class LogTreeTest {
     }
 
     @Test
+    fun testLogTreeWithNullTag() {
+        val loggedEntries = mutableListOf<LogEntry>()
+
+        val tree = object : LogTree {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
+                loggedEntries.add(LogEntry(priority, tag, message, throwable))
+            }
+        }
+
+        tree.log(LogPriority.INFO, null, "Message", null)
+
+        assertEquals(1, loggedEntries.size)
+        assertEquals(null, loggedEntries[0].tag)
+    }
+
+    @Test
     fun testLogTreeWithEmptyTag() {
         val loggedEntries = mutableListOf<LogEntry>()
 
         val tree = object : LogTree {
-            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
                 loggedEntries.add(LogEntry(priority, tag, message, throwable))
             }
         }
@@ -104,7 +120,7 @@ class LogTreeTest {
         val loggedEntries = mutableListOf<LogEntry>()
 
         val tree = object : LogTree {
-            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
                 loggedEntries.add(LogEntry(priority, tag, message, throwable))
             }
         }
@@ -133,7 +149,7 @@ class LogTreeTest {
             override fun isLoggable(tag: String?, priority: LogPriority): Boolean =
                 tag != "BLOCKED" && priority >= LogPriority.INFO
 
-            override fun log(priority: LogPriority, tag: String, message: String, throwable: Throwable?) {
+            override fun log(priority: LogPriority, tag: String?, message: String, throwable: Throwable?) {
                 logCallCount++
             }
         }
