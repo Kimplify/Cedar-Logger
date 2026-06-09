@@ -14,7 +14,7 @@ kotlin {
     jvmToolchain(libs.versions.javaVersion.get().toInt())
     explicitApi()
 
-    androidLibrary {
+    android {
         namespace = "org.kimplify.cedar"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
